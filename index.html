@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="js/d3-comparator.js"></script>
+        <script src="js/custom.js"></script>
+    </head>
+    <body>
+        <!--preset svg pattern-->
+        <svg width="0" height="0">
+            <defs>
+                <pattern id="floralPattern" x="5" y="0" width="25" height="25" patternUnits="userSpaceOnUse">
+                    <path class="floral-cls-1" d="M0,4A2.16,2.16,0,0,0,1,5.11a3,3,0,0,0,3-.32A3.18,3.18,0,0,0,1.74,2.56a1.75,1.75,0,0,0-1.3.24l.7.94Z"/>
+                    <path class="floral-cls-1" d="M1.85,8.92a2.07,2.07,0,0,0,1.37-.48,3,3,0,0,0,.91-2.86A3.18,3.18,0,0,0,1.19,6.73,1.78,1.78,0,0,0,.88,8L2,7.76Z"/>
+                    <path class="floral-cls-1" d="M8.25,7.85a2.17,2.17,0,0,0-.48-1.38,3,3,0,0,0-2.86-.9A3.16,3.16,0,0,0,6.06,8.51a1.78,1.78,0,0,0,1.29.31L7.09,7.67Z"/>
+                    <path class="floral-cls-1" d="M8.84,3.81A2.14,2.14,0,0,1,7.9,4.92a3,3,0,0,1-3-.18A3.17,3.17,0,0,1,7,2.41a1.77,1.77,0,0,1,1.31.17l-.65,1Z"/>
+                    <path class="floral-cls-1" d="M3.69,0A2.09,2.09,0,0,0,3,1.33,3,3,0,0,0,4.39,4a3.18,3.18,0,0,0,1.3-2.89A1.77,1.77,0,0,0,5,0L4.38,1Z"/>
+                </pattern>
+            </defs>
+        </svg>
+        <svg width="0" height="0">
+            <defs>
+                <pattern id="spottedPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <circle class="spotted-cls-1" cx="10" cy="10" r="3"/>
+                </pattern>
+            </defs>
+        </svg>
+        <svg width="0" height="0">
+            <defs>
+                <pattern id="graphicsPattern" x="27" y="18" width="100" height="100" patternUnits="userSpaceOnUse">
+                    <polygon class="graphics-cls-1" points="4.97 72.92 32.59 25.08 60.21 72.92 4.97 72.92"/>
+                    <line class="graphics-cls-1" x1="32.59" y1="72.92" x2="32.59" y2="4.58"/>
+                    <polygon class="graphics-cls-2" points="29.94 0.5 32.59 5.09 35.24 0.5 35.24 6.29 32.59 10.88 29.94 6.29 29.94 0.5"/>
+                    <circle class="graphics-cls-1" cx="32.59" cy="38.95" r="28.75" transform="translate(-17.99 34.45) rotate(-45)"/>
+                    <polyline class="graphics-cls-1" points="35.24 12.03 32.59 16.62 29.94 12.03"/>
+                    <polyline class="graphics-cls-1" points="35.24 15.86 32.59 20.45 29.94 15.86"/>
+                    <polyline class="graphics-cls-1" points="35.24 67.7 32.59 72.28 29.94 67.7"/>
+                    <line class="graphics-cls-1" x1="0.5" y1="24.54" x2="64.68" y2="24.54"/>
+                </pattern>
+            </defs>
+        </svg>
+        <svg width="0" height="0">
+            <defs>
+                <pattern id="stripedPattern" x="0" y="0" width="100" height="20" patternUnits="userSpaceOnUse">
+                    <rect class="striped-cls-1" x="0" y="0" width="100" height="4"/>
+                </pattern>
+            </defs>
+        </svg>
+        <svg width="0" height="0">
+            <defs>
+                <pattern id="plaidPattern" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
+                    <rect class="plaid-cls-1" x="0" y="0" width="8" height="8"/>
+                    <rect class="plaid-cls-2" x="8" y="0" width="8" height="8"/>
+                    <rect class="plaid-cls-2" x="0" y="8" width="8" height="8"/>
+                    <rect class="plaid-cls-1" x="8" y="8" width="8" height="8"/>
+                </pattern>
+            </defs>
+        </svg>
+        <svg width="0" height="0">
+            <defs>
+                <linearGradient id="colorful" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color: #FCE5F6; stop-opacity: 1;"/>
+                    <stop offset="10%" style="stop-color: #FCDD00; stop-opacity: 1;"/>
+                    <stop offset="20%" style="stop-color: #F56E14; stop-opacity: 1;"/>
+                    <stop offset="30%" style="stop-color: #ED71AB; stop-opacity: 1;"/>
+                    <stop offset="40%" style="stop-color: #D42E00; stop-opacity: 1;"/>
+                    <stop offset="50%" style="stop-color: #81BA00; stop-opacity: 1;"/>
+                    <stop offset="60%" style="stop-color: #00A384; stop-opacity: 1;"/>
+                    <stop offset="70%" style="stop-color: #8F74B4; stop-opacity: 1;"/>
+                    <stop offset="80%" style="stop-color: #2DB2EB; stop-opacity: 1;"/>
+                    <stop offset="90%" style="stop-color: #9B6A39; stop-opacity: 1;"/>
+                    <stop offset="100%" style="stop-color: #58595B; stop-opacity: 1;"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        <!--head navigation-->
+        <div class="head-nav">
+            <div class="logo-container">
+                <img class="logo-img" src="image/logo.png">
+            </div>
+            <div class="text-container">
+                <a>Help</a>
+                <a>About</a>
+            </div>
+        </div>
+        <div id="overview" class="overview"> 
+            <h1 id="chernoff_title">Most Popular Style of 2013 Summer</h1>
+            <div class="sorting">
+                <div class="SORTED-BY">
+                    <p>SORTED BY</p>
+                </div>
+                <div class="break1"></div>
+                <div class="sort-group">
+                    <div class="sort_row1">
+                        <div id="sortCity" class="sorttag tagselected">
+                            <p>ALPHABET</p>
+                        </div>
+                        <div id="sortCategory" class="sorttag">
+                            <p>CLOTHING CATEGORY</p>
+                        </div>
+                        <div id="sortPattern" class="sorttag">
+                            <p>CLOTHING PATTERN</p>
+                        </div>
+                        <div id="sortColor" class="sorttag">
+                            <p>COLOR</p>
+                        </div>
+                    </div>
+                    <div class="sort-row2">
+                        <div id="sortNeckline" class="sorttag">
+                            <p>NECKLINE SHAPE</p>
+                        </div>
+                        <div id="sortHat" class="sorttag">
+                            <p>HAT</p>
+                        </div>
+                        <div id="sortGlasses" class="sorttag">
+                            <p>GLASSES</p>
+                        </div>
+                        <div id="sortScarf" class="sorttag">
+                            <p>SCARF</p>
+                        </div>
+                        <div id="sortNecktie" class="sorttag">
+                            <p>NECKTIE</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="chernoff"></div>
+        </div>
+        <div id="detail" class="detail">
+            <div style="display: flex; flex-direction: row;">
+                <div id="trend" class="section-title section-selected">
+                    <h1>Trend</h1>
+                </div>
+                <div class="break2"></div>
+                <div id="combo" class="section-title" style="margin-left: 25px;">
+                    <h1>Combos</h1>
+                </div>
+                
+<!--
+                <div class="filter-container">
+                    <button id="tanktop_filter">tanktop</button>
+                    <button id="tshirt_filter">tshirt</button>
+                    <button id="shirt_filter">shirt</button>
+                    <button id="sweater_filter">sweater</button>
+                    <button id="suit_filter">suit</button>
+                    <button id="outerwear_filter">outerwear</button>
+                    <button id="dress_filter">dress</button>
+                    <button id="folded_filter">folded</button>
+                    <button id="round_filter">round</button>
+                    <button id="vshape_filter">vshape</button>
+                </div>
+-->
+            </div>
+            <div class="line-chart-container">
+            </div>
+            <div class="chord-part"></div>
+        </div>
+        <div class="slider-container">
+            <input class="slider" type="range" min="1" max="11" value="1">
+        </div>
+        <ul class="range-labels">
+            <li>2013 Summer</li>
+            <li>2013 Fall</li>
+            <li>2013 Winter</li>
+            <li>2014 Spring</li>
+            <li>2014 Summer</li>
+            <li>2014 Fall</li>
+            <li>2014 Winter</li>
+            <li>2015 Spring</li>
+            <li>2015 Summer</li>
+            <li>2015 Fall</li>
+            <li>2015 Winter</li>
+        </ul>
+    </body>
+</html>

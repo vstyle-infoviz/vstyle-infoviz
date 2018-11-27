@@ -1,0 +1,772 @@
+@font-face {
+    font-family: "Futura";
+    src: url("../font/Futura.otf");
+}
+
+p{
+    margin: 0;
+    padding: 0;
+
+}
+
+h1 {
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 26px;
+    font-style: italic;
+    font-weight: normal;
+    color: #000;
+    letter-spacing: 0.3px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.head-nav {
+    width: 100%;
+    height: 50px;
+    background-color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.logo-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 25px;
+    margin: 0 30px;
+}
+
+.text-container {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.text-container a {
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 18px;
+    font-style: italic;
+    font-weight: normal;
+    color: #000;
+    letter-spacing: 0.3px;
+    margin: 0 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.5s;
+    -webkit-transition: background 0.5s;
+}
+
+.text-container a:hover {
+    color: #c4c4c4;
+}
+
+.overview {
+    width: 55%;
+    position: absolute;
+    top: 50px;
+    left: 30px;
+}
+
+.sorting {
+    display: flex;
+    flex-direction: row;
+}
+
+.SORTED-BY {
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.SORTED-BY p {
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 12px;
+    font-style: italic;
+    font-weight: 600;
+    color: #c7c7c7;
+    letter-spacing: -0.1px;
+}
+
+.break1 {
+    width: 13px;
+    height: 60px;
+    border-left: solid 1px #c7c7c7;
+    transform: translateX(20px) rotate(15deg);
+}
+
+.sort-row2 {
+    margin-top: 15px;
+}
+
+.sorttag {
+    position: relative;
+    display: inline-block;
+    margin-left: 30px;
+}
+
+.sorttag p {
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 12px;
+    font-style: italic;
+    font-weight: 300;
+    letter-spacing: -0.2px;
+    color: #000;
+    cursor: pointer;
+}
+
+.sorttag:hover p {
+    font-weight: bold;
+}
+
+.sorttag:hover p::after {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #000;
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.tagselected p {
+    font-weight: bold;
+}
+
+.tagselected p::after {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #000;
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+
+.detail {
+    width: 35%;
+    position: absolute;
+    top: 50px;
+    right: 50px;
+}
+
+.break2 {
+    width: 13px;
+    height: 40px;
+    border-left: solid 1px #c7c7c7;
+    transform: translateX(20px) rotate(15deg);
+    margin-top: 25px;
+}
+
+.filter-container {
+    width: 300px;
+}
+
+.line-chart-container {
+    width: 400px;
+    height: 620px;
+    border-radius: 12.5px;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
+    background-color: #ffffff;
+    margin-top: 50px;
+    position: relative;
+    display: block;
+}
+
+.line-chart {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.slider-container {
+    position: absolute;
+    top: 480px;
+    right: -180px;
+    display: block;
+    transform: rotate(90deg);
+    z-index: 4444;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 585px;
+    height: 3px;
+    background-color: #4a4a4a;
+    outline: transparent;
+}
+
+.slider::before {
+    content: "";
+    width: 3px;
+    height: 22px;
+    background-color: #4a4a4a;
+    position: absolute;
+    top: 3px;
+    left: 0px;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 66px;
+    height: 20px;
+    border-radius: 11px;
+    background-image: url("../image/slider.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.range-labels {
+    position: absolute;
+    top: 202px;
+    right: 30px;
+}
+
+.range-labels li {
+    font-family: "Futura";
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    color: #4a4a4a;
+    list-style: none;
+    margin-bottom: 36px;
+    position: relative;
+}
+
+.range-labels li:last-child {
+    margin-bottom: 0;
+}
+
+.range-labels li::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    background-color: #4a4a4a;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    left: -30px;
+    z-index: -4444;
+}
+
+
+
+
+
+
+.chord-part {
+    width: 400px;
+    height: 620px;
+    border-radius: 12.5px;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.5);
+    background-color: #ffffff;
+    margin-top: 50px;
+    position: relative;
+    display: none;
+}
+
+.section-title {
+    position: relative;
+}
+
+.section-title h1 {
+    color: #c7c7c7;
+    cursor: pointer;
+}
+
+.section-title:hover h1 {
+    color: #000;
+}
+
+.section-title:hover h1::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #000;
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.section-selected h1 {
+    color: #000;
+}
+
+.section-selected h1::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #000;
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+
+
+
+
+
+
+
+/*main body*/
+.malehead-cls-1{fill:#d3ab84;}
+.malehead-cls-2{fill:#dbb99a;}
+.malehead-cls-3{fill:#231f20;}
+
+.femalehead-cls-1{fill:#ddbe9a;}
+.femalehead-cls-2{fill:#e2c9b5;}
+.femalehead-cls-3{fill:#262626;}
+
+.maleupperbody-cls-1{fill:#dbba9b;}
+.maleupperbody-cls-2{fill:#d3ab84;}
+
+.femaleupperbody-cls-1{fill:#e2c9b5;}
+.femaleupperbody-cls-2{fill:#ddbe9a;}
+
+.maledownbody-cls-1{fill:#d3ab84;}
+.maledownbody-cls-2{fill:#dbb99a;}
+.maledownbody-cls-3{fill:#edebea;}
+.maledownbody-cls-4{fill:#dfdfde;}
+.maledownbody-cls-5{fill:#493829;}
+.maledownbody-cls-6{fill:#644c34;}
+.maledownbody-cls-7{fill:#3f2d1c;}
+.maledownbody-cls-8{fill:#5a4128;}
+
+.femaledownbody-cls-1{fill:#ddbe9a;}
+.femaledownbody-cls-2{fill:#e6ceb4;}
+.femaledownbody-cls-3{fill:#edebea;}
+.femaledownbody-cls-4{fill:#dfdfde;}
+.femaledownbody-cls-5{fill:#212222;}
+.femaledownbody-cls-6{fill:#1d1d1d;}
+.femaledownbody-cls-7{fill:#343436;}
+
+/*clothing category*/
+.tanktop-cls-1{fill:#52c3f0;}
+.tanktop-cls-2{fill:#00aeef;}
+
+.tshirt-cls-1{fill:#f7be79;}
+.tshirt-cls-2{fill:#f7941d;}
+
+.shirt-cls-1{fill:#c2b59b;}
+.shirt-cls-2{fill:#a09580;}
+.shirt-cls-3{fill:#231f20;}
+
+.sweater-cls-1{fill:#fbb040;}
+.sweater-cls-2{fill:#b07b2d;}
+.sweater-cls-3{fill:#8656a3;}
+.sweater-cls-4{fill:#262262;}
+
+.suit-cls-1{fill:#fff;}
+.suit-cls-2{fill:#231f20;}
+.suit-cls-3{fill:#414042;}
+.suit-cls-4{fill:#554b4d;}
+
+.outerwear-cls-1{fill:#fff;}
+.outerwear-cls-2{fill:#231f20;}
+.outerwear-cls-3{fill:#504749;}
+.outerwear-cls-4{fill:#435a85;}
+.outerwear-cls-5{fill:#d1d3d4;}
+.outerwear-cls-6{fill:#414042;}
+
+.dress-cls-1{fill:#fff;}
+.dress-cls-2{fill:#99262a;}
+.dress-cls-3{fill:#6c1b1e;}
+.dress-cls-4{fill:#ddbe9a;}
+.dress-cls-5{fill:#e6ceb4;}
+
+/*neckline shape*/
+.folded-cls-1{fill:#58595b;}
+.folded-cls-2{fill:#414042;}
+
+.vshape-cls-1{fill:#58595b;}
+.vshape-cls-2{fill:#d3ab84;}
+.vshape-cls-3{fill:#dbba9b;}
+
+.round-cls-1{fill:#6d6e71;}
+.round-cls-2{fill:#d3ab84;}
+.round-cls-3{fill:#dbb99a;}
+
+/*scarf, hat, glasses, necktie*/
+.scarf-cls-1{fill:#27aae1;stroke:#27aae1;}
+.scarf-cls-1,.scarf-cls-2{stroke-miterlimit:10;}
+.scarf-cls-2{fill:#1b75bc;stroke:#1b75bc;}
+
+.malehat-cls-1{fill:#181823;}
+.malehat-cls-2{fill:#a7a9ac;}
+
+.femalehat-cls-1{fill:#d77d35;}
+.femalehat-cls-2{fill:#fbb378;}
+.femalehat-cls-3{fill:#bee3d8;}
+.femalehat-cls-4{fill:#f15d5c;}
+.femalehat-cls-5{fill:#48b896;}
+
+.maleglasses-cls-1{fill:#e6e7e8;}
+.maleglasses-cls-2{fill:#323232;}
+
+.femaleglasses-cls-1{fill:#414042;}
+.femaleglasses-cls-2{fill:#323232;}
+
+.necktie-cls-1{fill:#231f20;}
+.necktie-cls-2{fill:#353433;}
+
+/*clothing pattern*/
+.floral-cls-1{fill:rgba(241, 242, 242, 0.9);}
+
+.spotted-cls-1{fill:rgba(241, 242, 242, 0.8);}
+
+.graphics-cls-1{fill:none;}
+.graphics-cls-1,.graphics-cls-2{stroke:rgba(241, 242, 242, 0.9);stroke-linecap:round;stroke-linejoin:round;}
+
+.striped-cls-1{fill:rgba(241, 242, 242, 0.8);}
+
+.plaid-cls-1{fill:rgba(241, 242, 242, 0.3);}
+.plaid-cls-2{fill:none;}
+
+/*chernoff section*/
+#chernoff {
+    width: 60vw;
+    margin-top: 0px;
+    position: relative;
+}
+
+/*main body position*/
+.person {
+    display: inline-block;
+    width: 90px;
+    height: 100px;
+    position: relative;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.person:hover {
+    transform: scale(1.5);
+    z-index: 0;
+}
+
+.person:hover::before {
+    content: "";
+    position: absolute;
+    width: 60px;
+    height: 120px;
+    top: -12%;
+    left: 15.5%;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 0 #c6c6c6;
+    background-color: #ffffff;
+    z-index: -9999;
+}
+
+.person:hover text {
+    display: none;
+}
+
+.person:hover .comboBtn {
+    display: block;
+}
+
+.tooltip {
+    position: absolute;
+    width: 200px;
+    height: 175px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px 0 #c4c4c4;
+    border: solid 1px #4a4a4a;
+    z-index: 4444;
+    padding-left: 15px;
+    display: flex;
+    flex-direction: row;
+}
+
+.text {
+    margin-top: 20px;
+}
+
+.icon {
+    margin-top: 20px;
+    margin-left: 15px;
+    position: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.line {
+    width: 1px;
+    height: 145px;
+    background-color: #4a4a4a;
+    position: absolute;
+    top: 15px;
+    left: 135px;
+}
+
+.tooltip-name {
+    font-family: "Futura";
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.29;
+    letter-spacing: -0.1px;
+    color: #4a4a4a;
+    margin-bottom: 10px;
+}
+
+.tooltip-detail {
+    width: 110px;
+    font-family: Avenir;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: -0.1px;
+    color: #4a4a4a;
+    padding-bottom: 5px;
+}
+
+.icon-size {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    padding-bottom: 10px;
+}
+
+.hat-icon {
+    display: none;
+}
+
+.glasses-icon {
+    display: none;
+}
+
+.scarf-icon {
+    display: none;
+}
+
+.necktie-icon {
+    display: none;
+}
+
+/*body position*/
+
+.head-position {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.upperbody-position {
+    position: absolute;
+    top: 31.4%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.downbody-position {
+    position: absolute;
+    top: 58.4%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+/*clothing category position*/
+.tanktop-position {
+    position: absolute;
+    top: 31.4%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.tshirt-position {
+    position: absolute;
+    top: 31.4%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.shirt-position {
+    position: absolute;
+    top: 31.4%;
+    left: 50%;
+    transform: translate(-50.5%, 0);
+}
+
+.sweater-position {
+    position: absolute;
+    top: 31.4%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.suit-position {
+    position: absolute;
+    top: 31.4%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.outerwear-position {
+    position: absolute;
+    top: 29.3%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.dress-position {
+    position: absolute;
+    top: 31.4%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+/*neckline shape position*/
+.folded-position {
+    position: absolute;
+    top: 18.3%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.vshape-position {
+    position: absolute;
+    top: 23.7%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.round-position {
+    position: absolute;
+    top: 21.5%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+/*scarf, hat, glasses, necktie position*/
+.scarf-position {
+    position: absolute;
+    top: 25.8%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.malehat-position {
+    position: absolute;
+    top: -3.3%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.femalehat-position {
+    position: absolute;
+    top: -0.8%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.maleglasses-position {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.femaleglasses-position {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.necktie-position {
+    position: absolute;
+    top: 17.8%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+/*city name position*/
+.city-position {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+
+
+
+/*line chart*/
+.axis path {
+    stroke: #4a4a4a;
+}
+
+.axis text {
+    font-family: "Futura";
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    color: #4a4a4a;
+}
+
+.line-plot {
+    fill: none;
+    stroke: #4a4a4a;
+    stroke-width: 1px;
+}
+
+/*
+.dots {
+    z-index: 5555;
+}
+*/
+
+.dot {
+    stroke: #4a4a4a;
+    stroke-width: 2px;
+    fill: #ffffff;
+}
+
+.ruler {
+    width: 362px;
+    height: 1px;
+    background-color: #9b9b9b;
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.line-tip {
+    position: absolute;
+    width: 170px;
+    height: 190px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px 0 #c4c4c4;
+    border: solid 1px #4a4a4a;
+    z-index: 5555;
+/*    padding-left: 15px;*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+}
