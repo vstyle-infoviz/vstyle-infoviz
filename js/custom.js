@@ -112,11 +112,11 @@ $(document).ready(function() {
         "wearing_hat:Hat",
         "wearing_glasses:Glasses",
         "clothing_category:Shirt",
-        "clothing_category:T-Shirt",
+        "clothing_category:T-shirt",
         "clothing_category:Dress",
         "clothing_category:Outerwear",
         "clothing_category:Sweater",
-        "clothing_category:Tank Top",
+        "clothing_category:Tank top",
         "clothing_category:Suit"
     ];
     
@@ -1011,6 +1011,8 @@ $(document).ready(function() {
                     .style("pointer-events", "none");
                 d3.selectAll(".person")
                     .style("opacity","1");
+                d3.select(".cover")
+                    .style("display", "none");
                 updateMatrixChart(cityStamp, timeStamp);
             });
         
@@ -1023,8 +1025,11 @@ $(document).ready(function() {
                     .style("pointer-events", "none");
                 d3.select(".line2").html("");
                 d3.select(".dots2").html("");
+                d3.select(".cover")
+                    .style("display", "none");
                 d3.selectAll(".person")
                     .attr("secondary-selected", "0");
+                
                 updateMatrixChart(cityStamp, timeStamp);
             });
         
