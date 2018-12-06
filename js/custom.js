@@ -594,6 +594,12 @@ $(document).ready(function() {
                 .append("div")
                 .attr("class", "tooltip")
                 .style("opacity", "0");
+            
+            d3.select("#chernoff")
+                .append("div")
+                .attr("class", "cover")
+                .style("display", "none");
+                
         
             linetip = d3.select(".line-chart-container")
                 .append("div")
@@ -1080,11 +1086,22 @@ $(document).ready(function() {
                                 .attr("secondary-selected", "0");
                             d3.select(this)
                                 .attr("secondary-selected", "1");
+                            
+                            var positionX = $(this).offset().left + 3;
+                            var positionY = $(this).offset().top -167;
+                            
+                            d3.select(".cover")
+                                .style("display", "block")
+                                .style("left", positionX + "px")
+                                .style("top", positionY + "px");
+                            
                             cityStamp.push(d.city_id);
                         } else {
                             clearLineChart();
                             d3.selectAll(".person")
-                                .attr("secondary-selected", "0");    
+                                .attr("secondary-selected", "0"); 
+                            d3.select(".cover")
+                                .style("display", "none");
                         }
                         
                         d3.selectAll(".personBKG")
@@ -1094,7 +1111,7 @@ $(document).ready(function() {
                                 } else if (d3.select(this.parentNode).attr("major-selected") == "1") {
                                     return "0 0 8px 0 #000000";
                                 } else {
-                                    return "0 0 8px 0 #2d07ca";
+                                    return "0 0 8px 0 #aaaaaa";
                                 }
                             });
                     }
@@ -1132,7 +1149,7 @@ $(document).ready(function() {
                 if(d.city_id == cityStamp[0]) {
                     return "0 0 8px 0 #000000";
                 } else if (d.city_id == cityStamp[1]) {
-                    return "0 0 8px 0 #2d07ca";
+                    return "0 0 8px 0 #aaaaaa";
                 } else {
                     return "none";
                 }

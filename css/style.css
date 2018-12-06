@@ -1332,3 +1332,14 @@ h1 {
 .d3-tip thead tr {
   padding-top: 10px;
 }
+
+
+
+.cover {
+    position: absolute;
+    box-shadow: 0 0 8px 0 #aaaaaa;
+    width: 70px;
+    height: 120px;
+    border-radius: 10px;
+    z-index: -1;
+}
