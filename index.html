@@ -5,12 +5,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link href="css/lightbox.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-        <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400" rel="stylesheet">
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <script src="js/d3-comparator.js"></script>
+        <script src="js/d3-tip.js"></script>
         <script src="js/custom.js"></script>
+        <script src="js/lightbox.js"></script>
     </head>
     <body>
         <!--preset svg pattern-->
@@ -91,7 +93,7 @@
             </div>
         </div>
         <div id="overview" class="overview"> 
-            <h1 id="chernoff_title">Most Popular Style of 2013 Summer</h1>
+            <h1 id="chernoff_title">The Most Popular Styles in 2013 Summer</h1>
             <div class="sorting">
                 <div class="SORTED-BY">
                     <p>SORTED BY</p>
@@ -135,48 +137,184 @@
         </div>
         <div id="detail" class="detail">
             <div style="display: flex; flex-direction: row;">
-                <div id="trend" class="section-title section-selected">
+                <div id="trend" class="section-title section-selected" style="margin-left: 20px;">
                     <h1>Trend</h1>
                 </div>
-                <div class="break2"></div>
-                <div id="combo" class="section-title" style="margin-left: 25px;">
+<!--                <div class="break2"></div>-->
+                <div id="combo" class="section-title" style="margin-left: 50px;">
                     <h1>Combos</h1>
                 </div>
-                
-<!--
-                <div class="filter-container">
-                    <button id="tanktop_filter">tanktop</button>
-                    <button id="tshirt_filter">tshirt</button>
-                    <button id="shirt_filter">shirt</button>
-                    <button id="sweater_filter">sweater</button>
-                    <button id="suit_filter">suit</button>
-                    <button id="outerwear_filter">outerwear</button>
-                    <button id="dress_filter">dress</button>
-                    <button id="folded_filter">folded</button>
-                    <button id="round_filter">round</button>
-                    <button id="vshape_filter">vshape</button>
+            </div>
+            <div class="legend-container">
+                <div class="legend legend1" style="opacity : 0;">
+                    <img class="legend-icon legend-icon-major" src="image/major-legend.svg">
+                    <p class="legend-text"></p>
+                    <img class="delete" src="image/delete.svg">
                 </div>
--->
+                <div class="legend legend2" style="opacity : 0;">
+                    <img class="legend-icon legend-icon-secondary" src="image/secondary-legend.svg">
+                    <p class="legend-text"></p>
+                    <img class="delete" src="image/delete.svg">
+                </div>
             </div>
             <div class="line-chart-container">
+                <div class="filter-container">
+                    <p class="filter-cue">SELECT THE ATTRIBUTE</p>
+                    <div class="filter-display" style="display: flex; flex-direction: row;">
+                        <div style="width: 103px; text-align: center;">
+                            <p class="filter-category">CATEGORY</p>
+                        </div>
+                        <div class="break3"></div>
+                        <div style="width: 93px; text-align: center">
+                            <p class="filter-sub-category">SHIRT</p>
+                        </div>
+                        <div style="width: 20px;">
+                            <img class="filter-icon" src="image/dropdown.svg">
+                        </div>
+                    </div>
+                    <ul class="dropdown-menu menu-not-active">
+                        <li style="font-weight: bold;">CATEGORY</li>
+                        <li>PATTERN</li>
+                        <li>COLOR</li>
+                        <li>ACCESSORY</li>
+                        <li>NECKLINE</li>
+                    </ul>
+                    <div class="submenu-container menu-not-active">
+                        <ul class="dropdown-submenu menu-category">
+                            <li style="font-weight: bold;">SHIRT</li>
+                            <li>SWEATER</li>
+                            <li>DRESS</li>
+                            <li>OUTERWEAR</li>
+                            <li>TANK TOP</li>
+                            <li>T-SHIRT</li>
+                            <li>SUIT</li>
+                        </ul>
+                        <ul class="dropdown-submenu menu-pattern">
+                            <li>SOLID</li>
+                            <li>GRAPHICS</li>
+                            <li>FLORAL</li>
+                            <li>PLAID</li>
+                            <li>SPOTTED</li>
+                            <li>STRIPED</li>
+                        </ul>
+                        <ul class="dropdown-submenu menu-color">
+                            <li>WHITE</li>
+                            <li>BLACK</li>
+                            <li>PINK</li>
+                            <li>BLUE</li>
+                            <li>RED</li>
+                            <li>CYAN</li>
+                            <li>GREEN</li>
+                            <li>GRAY</li>
+                            <li>YELLOW</li>
+                            <li>BROWN</li>
+                            <li>PURPLE</li>
+                            <li>ORANGE</li>
+                            <li>COLORFUL</li>
+                        </ul>
+                        <ul class="dropdown-submenu menu-accessory">
+                            <li>HAT</li>
+                            <li>GLASSES</li>
+                            <li>SCARF</li>
+                            <li>NECKTIE</li>
+                        </ul>
+                        <ul class="dropdown-submenu menu-neckline">
+                            <li>FOLDED</li>
+                            <li>ROUND</li>
+                            <li>V-SHAPE</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="instruction">
+                    <p class="instruction-text">Click an avatar to begin.</p>
+                </div>
             </div>
-            <div class="chord-part"></div>
+            <div class="matrix-part">
+                <div class="matrix-instructions">
+                    <p>Color represents the dominant color of the combo.</p>
+                    <p>Saturation represents how popular the combo is.</p>
+                </div>
+<!--
+                <div class="matrix-legend-container">
+                    <div class="legend matrix-legend1">
+                        <img class="matrix-legend-icon" src="image/major-legend.svg" style="opacity: 0;">
+                        <p class="matrix-legend-text"></p>
+                        <img class="matrix-delete" src="image/delete.svg" style="opacity: 0;">
+                    </div>
+                    <div class="legend matrix-legend2">
+                        <img class="matrix-legend-icon" src="image/secondary-legend.svg" style="opacity: 0;">
+                        <p class="matrix-legend-text"></p>
+                        <img class="matrix-delete" src="image/delete.svg" style="opacity: 0;">
+                    </div>
+                </div>
+-->
+
+                <div class="instruction">
+                    <p class="instruction-text">Click an avatar to begin.</p>
+                </div>
+                <img class="matrix-comparison-icon" src="image/matrix-comparison-icon.svg">
+                <div id="grid">
+                    <div class="diagonal"></div>
+                </div>
+                <div id="imageBox">
+                    <p>Click a combo cell to see images.</p>
+                    <div id="imageHolder">
+                        <a href="image/placeholder.jpg" data-lightbox="imagebox"><img src="image/placeholder.jpg"></a>
+                        <a href="image/placeholder.jpg" data-lightbox="imagebox"><img src="image/placeholder.jpg"></a>
+                        <a href="image/placeholder.jpg" data-lightbox="imagebox"><img src="image/placeholder.jpg"></a>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="slider-container">
             <input class="slider" type="range" min="1" max="11" value="1">
         </div>
         <ul class="range-labels">
-            <li>2013 Summer</li>
-            <li>2013 Fall</li>
-            <li>2013 Winter</li>
-            <li>2014 Spring</li>
-            <li>2014 Summer</li>
-            <li>2014 Fall</li>
-            <li>2014 Winter</li>
-            <li>2015 Spring</li>
-            <li>2015 Summer</li>
-            <li>2015 Fall</li>
-            <li>2015 Winter</li>
+            <li class="quarter1">
+                <p>2013</p>
+                <p class="quarter" style="opacity: 1;">Summer</p>
+            </li>
+            <li class="quarter2">
+                <p class="year">2013</p>
+                <p class="quarter">Fall</p>
+            </li>
+            <li class="quarter3">
+                <p class="year">2013</p>
+                <p class="quarter">Winter</p>
+            </li>
+            <li class="quarter4">
+                <p>2014</p>
+                <p class="quarter">Spring</p>
+            </li>
+            <li class="quarter5">
+                <p class="year">2014</p>
+                <p class="quarter">Summer</p>
+            </li>
+            <li class="quarter6">
+                <p class="year">2014</p>
+                <p class="quarter">Fall</p>
+            </li>
+            <li class="quarter7">
+                <p class="year">2014</p>
+                <p class="quarter">Winter</p>
+            </li>
+            <li class="quarter8">
+                <p>2015</p>
+                <p class="quarter">Spring</p>
+            </li>
+            <li class="quarter9">
+                <p class="year">2015</p>
+                <p class="quarter">Summer</p>
+            </li>
+            <li class="quarter10">
+                <p class="year">2015</p>
+                <p class="quarter">Fall</p>
+            </li>
+            <li class="quarter11">
+                <p class="year">2015</p>
+                <p class="quarter">Winter</p>
+            </li>
         </ul>
     </body>
 </html>

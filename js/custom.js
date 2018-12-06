@@ -1,4 +1,18 @@
 $(document).ready(function() {
+    var pressing = false;
+    
+    d3.select("body")
+        .on("keydown", function() {
+            if (d3.event.key == "s") {
+                pressing = true;
+//                console.log(pressing);
+            }
+        })
+        .on("keyup", function() {
+            pressing = false;
+//            console.log(pressing);
+        })
+    
     
     var citySort = d3.comparator()
         .order(d3.ascending, function(d) { return cityNameArray[parseInt(d.city_id)]; });
@@ -20,25 +34,38 @@ $(document).ready(function() {
         .order(d3.ascending, function(d) { return cityNameArray[parseInt(d.city_id)]; });
     
     var hatSort = d3.comparator()
-        .order(d3.ascending, function(d) { return d.wearing_hat; })
+        .order(d3.descending, function(d) { return d.wearing_hat; })
         .order(d3.ascending, function(d) { return cityNameArray[parseInt(d.city_id)]; });
     
     var glassesSort = d3.comparator()
-        .order(d3.ascending, function(d) { return d.wearing_glasses; })
+        .order(d3.descending, function(d) { return d.wearing_glasses; })
         .order(d3.ascending, function(d) { return cityNameArray[parseInt(d.city_id)]; });
     
     var scarfSort = d3.comparator()
-        .order(d3.ascending, function(d) { return d.wearing_scarf; })
+        .order(d3.descending, function(d) { return d.wearing_scarf; })
         .order(d3.ascending, function(d) { return cityNameArray[parseInt(d.city_id)]; });
     
     var necktieSort = d3.comparator()
-        .order(d3.ascending, function(d) { return d.wearing_necktie; })
+        .order(d3.descending, function(d) { return d.wearing_necktie; })
         .order(d3.ascending, function(d) { return cityNameArray[parseInt(d.city_id)]; });
     
     var timeSort = d3.comparator()
         .order(d3.ascending, function(d) { return d.key; });
     
     
+    var timeline = [
+        "2013 Summer",
+        "2013 Fall",
+        "2013 Winter",
+        "2014 Spring",
+        "2014 Summer",
+        "2014 Fall",
+        "2014 Winter",
+        "2015 Spring",
+        "2015 Summer",
+        "2015 Fall",
+        "2015 Winter"
+    ];
     
     var colors_left = {
         "White": "#FCE5F6",
@@ -72,100 +99,56 @@ $(document).ready(function() {
         "More than 1 color": "url(#colorful)"
     };
     
-    cityStamp = "1";
+    var matrix_legend = [
+        "clothing_pattern:Solid",
+        "clothing_pattern:Graphics",
+        "clothing_pattern:Floral",
+        "clothing_pattern:Striped",
+        "clothing_pattern:Plaid",
+        "clothing_pattern:Spotted",
+        "wearing_necktie:Necktie",
+        "collar_presence:Collar",
+        "wearing_scarf:Scarf",
+        "wearing_hat:Hat",
+        "wearing_glasses:Glasses",
+        "clothing_category:Shirt",
+        "clothing_category:T-Shirt",
+        "clothing_category:Dress",
+        "clothing_category:Outerwear",
+        "clothing_category:Sweater",
+        "clothing_category:Tank Top",
+        "clothing_category:Suit"
+    ];
+    
+    
+    cityStamp = [];
     timeStamp = "2013_2";
     sortStamp = citySort;
-    filterStamp = "Tank top";
+    filterStamp = "Shirt";
+    sliderValue = 1;
     
-    $(".slider").change(function() {
-        if ($(".slider").val() == "1") {
-            timeStamp = "2013_2";
-            $("#chernoff_title").text("Most Popular Style of 2013 Summer");
-            updateChernoff(timeStamp, sortStamp);
-            
-            d3.select(".ruler")
-                .style("top", "60px");
+    $(".slider").on("input", function() {
+        sliderValue = $(".slider").val();
+        
+        $(".year, .quarter").css("opacity", "0");
+        
+        $(".quarter" + sliderValue + " .year").css("opacity", "1");
+        
+        $(".quarter" + sliderValue + " .quarter").css("opacity", "1");
+        
+        timeStamp = "201"+(3+(Math.floor(sliderValue/4)))+"_"+((sliderValue%4)+1);
+        if (cityStamp.length > 0) {
+            $("#chernoff_title").text("The Similarities of "+cityNameArray[cityStamp[0]]+"'s Style of "+ timeline[sliderValue-1]);
+        } else {
+            $("#chernoff_title").text("The Most Popular Styles in " + timeline[sliderValue-1]);
         }
-        else if($(".slider").val() == "2") {
-            timeStamp = "2013_3";
-            $("#chernoff_title").text("Most Popular Style of 2013 Fall");
-            updateChernoff(timeStamp, sortStamp);
-            
-            d3.select(".ruler")
-                .style("top", "112px");
+        updateChernoff(timeStamp, sortStamp);
+        updateMatrixChart(cityStamp, timeStamp);
+        if (cityStamp.length > 0) {
+            updateSimilarityChart(cityStamp[0]);            
         }
-        else if($(".slider").val() == "3") {
-            timeStamp = "2013_4";
-            $("#chernoff_title").text("Most Popular Style of 2013 Winter");
-            updateChernoff(timeStamp, sortStamp);
-            
-            d3.select(".ruler")
-                .style("top", "164px");
-        }
-        else if ($(".slider").val() == "4") {
-            timeStamp = "2014_1";
-            $("#chernoff_title").text("Most Popular Style of 2014 Spring");
-            updateChernoff(timeStamp, sortStamp);
-            
-            d3.select(".ruler")
-                .style("top", "216px");
-        }
-        else if($(".slider").val() == "5") {
-            timeStamp = "2014_2";
-            $("#chernoff_title").text("Most Popular Style of 2014 Summer");
-            updateChernoff(timeStamp, sortStamp);
-            
-            d3.select(".ruler")
-                .style("top", "268px");
-        }
-        else if($(".slider").val() == "6") {
-            timeStamp = "2014_3";
-            $("#chernoff_title").text("Most Popular Style of 2014 Fall");
-            updateChernoff(timeStamp, sortStamp);
-            
-            d3.select(".ruler")
-                .style("top", "320px");
-        }
-        else if($(".slider").val() == "7") {
-            timeStamp = "2014_4";
-            $("#chernoff_title").text("Most Popular Style of 2014 Winter");
-            updateChernoff(timeStamp, sortStamp);
-            
-            d3.select(".ruler")
-                .style("top", "372px");
-        }
-        else if($(".slider").val() == "8") {
-            timeStamp = "2015_1";
-            $("#chernoff_title").text("Most Popular Style of 2015 Spring");
-            updateChernoff(timeStamp, sortStamp);
-            
-            d3.select(".ruler")
-                .style("top", "424px");
-        }
-        else if($(".slider").val() == "9") {
-            timeStamp = "2015_2";
-            $("#chernoff_title").text("Most Popular Style of 2015 Summer");
-            updateChernoff(timeStamp, sortStamp);
-            
-            d3.select(".ruler")
-                .style("top", "476px");
-        }
-        else if($(".slider").val() == "10") {
-            timeStamp = "2015_3";
-            $("#chernoff_title").text("Most Popular Style of 2015 Fall");
-            updateChernoff(timeStamp, sortStamp);
-            
-            d3.select(".ruler")
-                .style("top", "528px");
-        }
-        else if($(".slider").val() == "11") {
-            timeStamp = "2015_4";
-            $("#chernoff_title").text("Most Popular Style of 2015 Winter");
-            updateChernoff(timeStamp, sortStamp);
-            
-            d3.select(".ruler")
-                .style("top", "580px");
-        }
+        d3.select(".ruler")
+            .style("top", 59+(52*(sliderValue-1))+"px");
     });
     
     $("#sortCity").click(function() {
@@ -181,6 +164,10 @@ $(document).ready(function() {
         
         sortStamp = citySort;
         updateChernoff(timeStamp, sortStamp);
+        if (cityStamp.length > 0) {
+            updateSimilarityChart(cityStamp[0]);            
+        }
+
     });
     
     $("#sortCategory").click(function() {
@@ -196,6 +183,10 @@ $(document).ready(function() {
         
         sortStamp = categorySort;
         updateChernoff(timeStamp, sortStamp);
+        if (cityStamp.length > 0) {
+            updateSimilarityChart(cityStamp[0]);            
+        }
+
     });
     
     $("#sortPattern").click(function() {
@@ -211,6 +202,9 @@ $(document).ready(function() {
         
         sortStamp = patternSort;
         updateChernoff(timeStamp, sortStamp);
+        if (cityStamp.length > 0) {
+            updateSimilarityChart(cityStamp[0]);            
+        }
     });
     
     $("#sortColor").click(function() {
@@ -226,6 +220,10 @@ $(document).ready(function() {
         
         sortStamp = colorSort;
         updateChernoff(timeStamp, sortStamp);
+        if (cityStamp.length > 0) {
+            updateSimilarityChart(cityStamp[0]);            
+        }
+
     });
     
     $("#sortNeckline").click(function() {
@@ -241,6 +239,10 @@ $(document).ready(function() {
         
         sortStamp = necklineSort;
         updateChernoff(timeStamp, sortStamp);
+        if (cityStamp.length > 0) {
+            updateSimilarityChart(cityStamp[0]);            
+        }
+
     });
     
     $("#sortHat").click(function() {
@@ -256,6 +258,9 @@ $(document).ready(function() {
         
         sortStamp = hatSort;
         updateChernoff(timeStamp, sortStamp);
+        if (cityStamp.length > 0) {
+            updateSimilarityChart(cityStamp[0]);            
+        }
     });
     
     $("#sortGlasses").click(function() {
@@ -271,6 +276,10 @@ $(document).ready(function() {
         
         sortStamp = glassesSort;
         updateChernoff(timeStamp, sortStamp);
+        if (cityStamp.length > 0) {
+            updateSimilarityChart(cityStamp[0]);            
+        }
+
     });
     
     $("#sortScarf").click(function() {
@@ -286,6 +295,10 @@ $(document).ready(function() {
         
         sortStamp = scarfSort;
         updateChernoff(timeStamp, sortStamp);
+        if (cityStamp.length > 0) {
+            updateSimilarityChart(cityStamp[0]);            
+        }
+
     });
     
     $("#sortNecktie").click(function() {
@@ -301,6 +314,10 @@ $(document).ready(function() {
         
         sortStamp = necktieSort;
         updateChernoff(timeStamp, sortStamp);
+        if (cityStamp.length > 0) {
+            updateSimilarityChart(cityStamp[0]);            
+        }
+
     });
     
     
@@ -309,7 +326,10 @@ $(document).ready(function() {
         $("#combo").removeClass("section-selected");
         
         $(".line-chart-container").css("display", "block");
-        $(".chord-part").css("display", "none");
+        $(".matrix-part").css("display", "none");
+        
+        $(".legend-icon-major").attr("src", "image/major-legend.svg");
+        $(".legend-icon-secondary").attr("src", "image/secondary-legend.svg");
     });
     
     $("#combo").click(function() {
@@ -317,63 +337,120 @@ $(document).ready(function() {
         $("#trend").removeClass("section-selected");
         
         $(".line-chart-container").css("display", "none");
-        $(".chord-part").css("display", "block");
+        $(".matrix-part").css("display", "block");
+        
+        $(".legend-icon-major").attr("src", "image/major-matrix-legend.svg");
+        $(".legend-icon-secondary").attr("src", "image/secondary-matrix-legend.svg");
+    });
+    
+    
+    $(".filter-display").click(function() {
+        $(".dropdown-menu").toggleClass("menu-active menu-not-active");
+        $(".submenu-container").toggleClass("menu-active menu-not-active");
+        
+        if ($(".dropdown-menu").hasClass("menu-active")) {
+            $(".filter-container").css("background-color", "#4a4a4a");
+            $(".filter-container p").css("opacity", "0");
+            $(".break3").css("opacity", "0");
+            $(".filter-icon").attr("src", "image/dropup.svg");
+            $(".filter-cue").css("opacity", "1");
+        }
+        else {
+            $(".filter-container").css("background-color", "#fff");
+            $(".filter-container p").css("opacity", "1");
+            $(".break3").css("opacity", "1");
+            $(".filter-icon").attr("src", "image/dropdown.svg");
+            $(".filter-cue").css("opacity", "0");
+        }
+    });
+    
+    $(".dropdown-menu li").click(function() {
+        $(".dropdown-menu li").css("font-weight", "300");
+        $(this).css("font-weight", "bold");
+        
+        if ($(this).text() == "CATEGORY") {
+            $(".menu-category").css("display", "block");
+            
+            $(".menu-pattern").css("display", "none");
+            $(".menu-color").css("display", "none");
+            $(".menu-accessory").css("display", "none");
+            $(".menu-neckline").css("display", "none");
+        }
+        else if($(this).text() == "PATTERN") {
+            $(".menu-pattern").css("display", "block");
+            
+            $(".menu-category").css("display", "none");
+            $(".menu-color").css("display", "none");
+            $(".menu-accessory").css("display", "none");
+            $(".menu-neckline").css("display", "none");
+        }
+        else if($(this).text() == "COLOR") {
+            $(".menu-color").css("display", "block");
+            
+            $(".menu-category").css("display", "none");
+            $(".menu-pattern").css("display", "none");
+            $(".menu-accessory").css("display", "none");
+            $(".menu-neckline").css("display", "none");
+        }
+        else if($(this).text() == "ACCESSORY") {
+            $(".menu-accessory").css("display", "block");
+            
+            $(".menu-category").css("display", "none");
+            $(".menu-pattern").css("display", "none");
+            $(".menu-color").css("display", "none");
+            $(".menu-neckline").css("display", "none");
+        }
+        else if($(this).text() == "NECKLINE") {
+            $(".menu-neckline").css("display", "block");
+            
+            $(".menu-category").css("display", "none");
+            $(".menu-pattern").css("display", "none");
+            $(".menu-color").css("display", "none");
+            $(".menu-accessory").css("display", "none");
+        }
+    });
+    
+    $(".dropdown-submenu li").click(function() {
+        $(".dropdown-submenu li").css("font-weight", "300");
+        $(this).css("font-weight", "bold");
+        
+        if ($(this).parent().hasClass("menu-category")) {
+            $(".filter-category").text("CATEGORY");
+        }
+        else if ($(this).parent().hasClass("menu-pattern")) {
+            $(".filter-category").text("PATTERN");
+        }
+        else if ($(this).parent().hasClass("menu-color")) {
+            $(".filter-category").text("COLOR");
+        }
+        else if ($(this).parent().hasClass("menu-accessory")) {
+            $(".filter-category").text("ACCESSORY");
+        }
+        else if ($(this).parent().hasClass("menu-neckline")) {
+            $(".filter-category").text("NECKLINE");
+        }
+        
+        $(".filter-sub-category").text($(this).text());
+        
+        var str = $(this).text().toLowerCase();
+        
+        var str_changed = str.charAt(0).toUpperCase() + str.substr(1);
+        
+        console.log(str_changed);
+        
+        if (str_changed == "Colorful") {
+            filterStamp = "More than 1 color";
+            updateLineChart(cityStamp, filterStamp);
+        }
+        else {
+            filterStamp = str_changed;
+            updateLineChart(cityStamp, filterStamp);
+        }
+        
     });
     
     
     
-    
-    
-    $("#tanktop_filter").click(function() {
-        filterStamp = "Tank top";
-        updateLineChart(cityStamp, filterStamp);
-    });
-    
-    $("#tshirt_filter").click(function() {
-        filterStamp = "T-shirt";
-        updateLineChart(cityStamp, filterStamp);
-    });
-    
-    $("#shirt_filter").click(function() {
-        filterStamp = "Shirt";
-        updateLineChart(cityStamp, filterStamp);
-    });
-    
-    $("#sweater_filter").click(function() {
-        filterStamp = "Sweater";
-        updateLineChart(cityStamp, filterStamp);
-    });
-    
-    $("#suit_filter").click(function() {
-        filterStamp = "Suit";
-        updateLineChart(cityStamp, filterStamp);
-    });
-    
-    $("#outerwear_filter").click(function() {
-        filterStamp = "Outerwear";
-        updateLineChart(cityStamp, filterStamp);
-    });
-    
-    $("#dress_filter").click(function() {
-        filterStamp = "Dress";
-        updateLineChart(cityStamp, filterStamp);
-    });
-    
-    $("#folded_filter").click(function() {
-        filterStamp = "Folded";
-        updateLineChart(cityStamp, filterStamp);
-    });
-    
-    $("#round_filter").click(function() {
-        filterStamp = "Round";
-        updateLineChart(cityStamp, filterStamp);
-    });
-    
-    $("#vshape_filter").click(function() {
-        filterStamp = "V-shape";
-        updateLineChart(cityStamp, filterStamp);
-    });
-
     
     d3.csv("../data/streetstyle.csv")
         .row(function(d) {
@@ -426,6 +503,8 @@ $(document).ready(function() {
                 wearing_glasses: d.wearing_glasses,
                 wearing_scarf: d.wearing_scarf,
                 wearing_necktie: d.wearing_necktie,
+                url : d.url,
+                collar_presence : d.collar_presence
             }
         })
         .get(function(error, rows) {
@@ -437,8 +516,6 @@ $(document).ready(function() {
             }
 
             dataset = rows;
-//            console.log(dataset);
-
 
             // main body
             maleHeadHTML = '<svg><rect class="part1 malehead-cls-1" x="33.25" y="105.02" width="15.62" height="18.31"/><path id="_Path_" data-name="&lt;Path&gt;" class="part1 malehead-cls-1" d="M2.63,66.13C5.06,73.7,10,73.05,10,73.05L6.6,57.58S.2,58.56,2.63,66.13Z"/><path id="_Path_2" data-name="&lt;Path&gt;" class="part1 malehead-cls-1" d="M79.49,66.13c-2.43,7.57-7.41,6.92-7.41,6.92l3.44-15.47S81.92,58.56,79.49,66.13Z"/><path class="part2 malehead-cls-2" d="M76.06,51.69c0,19.33-10.78,57.24-35.14,57.24S6.06,71,6.06,51.69a35,35,0,0,1,70,0Z"/><path class="part1 malehead-cls-1" d="M40.92,108.93C16.56,108.93,6.06,71,6.06,51.69a35,35,0,0,1,35-35Z"/><path class="malehead-cls-3" d="M74.71,66.55s1.84-16.21,4.71-23.5,3.19-16.7-5.91-19.61c0,0,1.83-11.61-11.36-17.44S40.21-5.3,15.37,9.5c0,0-14.53,9.82-8.5,13.18,0,0-4.67,1.68-3.32,6,0,0-5.87,2.91-1.8,8,0,0-4.22,6.42.45,5.81,0,0-2.71,6,3.16,4.58,0,0,.45,10.55,1,10.85s1.81,9,1.81,9S9.73,57.53,9,51.57c0,0-.15-3.82,5.42-8.25,0,0,6.48-7.71,27.4-10,0,0,17.77-1.42,22.44-3,0,0,1.8,1.69,4.66,7.34,0,0-1.2,10.85,3.17,11.77C72.06,49.43,72,55.7,74.71,66.55Z"/><path class="malehead-cls-3" d="M74.3,69.52S74,84.1,75.93,87.12s-3.8,12.65-7.32,14.3c0,0-7,10.44-12.47,9.34a16.75,16.75,0,0,1-15.89,4.4s-9.87,2.48-14.48-4.12c0,0-10.57-4.12-13.55-10.72A13.76,13.76,0,0,1,6.8,83.82s.81-13.75,1.08-15.67,3,9.52,7.59,14.85a20,20,0,0,0,7.09,5.15,25.75,25.75,0,0,0,.78,5.57c1,2.8,8.44,14.57,14.11.55h7.3S49.9,108,58,94.82l.55-5.5s10.84-6,13.28-12.92Z"/></svg>';
@@ -491,7 +568,7 @@ $(document).ready(function() {
 
             necktieHTML ='<svg><defs><style></style></defs><title>Asset 13</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_25" data-name="Layer 25"><path class="necktie-cls-1" d="M25.4,3.63l0-.44A2.72,2.72,0,0,0,22.19.75c-2.12.37-9.3,3.72-9.3,3.72V5.4h-.24V4.47S5.47,1.12,3.35.75A2.72,2.72,0,0,0,.17,3.19l0,.44a36,36,0,0,0,0,6.05l0,.44a2.73,2.73,0,0,0,3.18,2.44h0c2.12-.37,9.3-3.72,9.3-3.72V7.47h.24V8.84s7.18,3.35,9.3,3.72h0a2.73,2.73,0,0,0,3.18-2.44l0-.44A34,34,0,0,0,25.4,3.63Z"/><path class="necktie-cls-2" d="M25.4,2.92l0-.44A2.73,2.73,0,0,0,22.19,0c-2.12.37-9.3,3.72-9.3,3.72V4.7h-.24V3.76S5.47.41,3.35,0A2.73,2.73,0,0,0,.17,2.48l0,.44A36,36,0,0,0,.13,9l0,.44a2.72,2.72,0,0,0,3.18,2.44h0c2.12-.37,9.3-3.72,9.3-3.72V6.76h.24V8.13s7.18,3.35,9.3,3.72h0a2.72,2.72,0,0,0,3.18-2.44l0-.44A34,34,0,0,0,25.4,2.92Z"/><path class="necktie-cls-1" d="M12.89,4.7h-.24V3.76s-1.29-.6-2.93-1.32a1.49,1.49,0,0,0-.14.63V8.82a1.49,1.49,0,0,0,.14.63c1.64-.72,2.93-1.32,2.93-1.32V6.76h.24V8.13s1.28.6,2.93,1.32A1.49,1.49,0,0,0,16,8.82V3.07a1.49,1.49,0,0,0-.14-.63c-1.65.72-2.93,1.32-2.93,1.32Z"/><path class="necktie-cls-2" d="M14.19,2.36H11.34a1.24,1.24,0,0,0-1.21,1.28v5A1.24,1.24,0,0,0,11.34,10h2.85A1.24,1.24,0,0,0,15.4,8.67v-5A1.24,1.24,0,0,0,14.19,2.36Z"/><polygon class="necktie-cls-1" points="9.87 6.54 5.62 5.77 9.87 5.15 9.87 6.54"/><polygon class="necktie-cls-1" points="15.67 6.54 19.92 5.77 15.67 5.15 15.67 6.54"/></g></g></svg>';
 
-            cityNameArray = ["", "Bangkok", "Beijing", "Bogota", "Buenos Aires", "Cairo", "Delhi", "Dhaka", "Guangzhou", "Istanbul", "Jakarta", "Karachi", "Kolkata", "Lagos", "London", "Los Angeles", "Manila", "Mexico City", "Mumbai", "New York City", "Osaka", "Rio de Janeiro", "Sao Paulo", "Seoul", "Shanghai", "Tianjin", "Tokyo", "Paris", "Berlin", "Madrid", "Kiev", "Rome", "Budapest", "Milan", "Sofia", "Nairobi", "Sydney", "Moscow", "Johannesburg", "Toronto", "Vancouver", "Chicago", "Austin", "Seattle", "Singapore"];
+            cityNameArray = ["", "Bangkok", "Beijing", "Bogota", "Buenos Aires", "Cairo", "Delhi", "Dhaka", "Guangzhou", "Istanbul", "Jakarta", "Karachi", "Kolkata", "Lagos", "London", "Los Angeles", "Manila", "Mexico City", "Mumbai", "New York", "Osaka", "Rio de Janeiro", "Sao Paulo", "Seoul", "Shanghai", "Tianjin", "Tokyo", "Paris", "Berlin", "Madrid", "Kiev", "Rome", "Budapest", "Milan", "Sofia", "Nairobi", "Sydney", "Moscow", "Johannesburg", "Toronto", "Vancouver", "Chicago", "Austin", "Seattle", "Singapore"];
 
             chernoff_nested = d3.nest()
                 .key(function(c) {
@@ -501,8 +578,8 @@ $(document).ready(function() {
                     return c.city_id;
                 })
                 .entries(dataset);
-
-//            console.log(chernoff_nested);
+        
+            updateChernoff(timeStamp, sortStamp);
         
             line_nested = d3.nest()
                 .key(function(c) {
@@ -513,8 +590,6 @@ $(document).ready(function() {
                 })
                 .entries(dataset);
 
-//            console.log(line_nested);
-
             tooltip = d3.select("#chernoff")
                 .append("div")
                 .attr("class", "tooltip")
@@ -523,31 +598,102 @@ $(document).ready(function() {
             linetip = d3.select(".line-chart-container")
                 .append("div")
                 .attr("class", "line-tip")
+                .style("display", "none");
+        
+            ruler = d3.select(".line-chart-container")
+                .append("div")
+                .attr("class", "ruler")
+                .style("opacity", "0");
+        
+            d3.select(".legend-container")
                 .style("opacity", "0");
         
             lineChart = d3.select(".line-chart-container")
                 .append("svg")
                 .attr("class", "line-chart")
-                .attr("width", "380")
-                .attr("height", "600");
+                .attr("width", "400")
+                .attr("height", "620");
         
-            lineContainer = lineChart.append("g")
-                .attr("class", "line");
+            lineContainer1 = lineChart.append("g")
+                .attr("class", "line1");
         
-            dotContainer = lineChart.append("g")
-                .attr("class", "dots");
-
-            updateChernoff(timeStamp, sortStamp);
-            updateLineChart(cityStamp, filterStamp);
+            dotContainer1 = lineChart.append("g")
+                .attr("class", "dots1");
         
-            lineChart.append("g")
+            lineContainer2 = lineChart.append("g")
+                .attr("class", "line2");
+        
+            dotContainer2 = lineChart.append("g")
+                .attr("class", "dots2");
+        
+            lineAxis = lineChart.append("g")
                 .attr("class", "axis x")
-                .attr("transform", "translate(0, 30)")
-                .call(xAxis);
+                .attr("transform", "translate(0, 600)")
+                .style("opacity", "0");
+            
+            matrix_size = 350;
+            var padding = .1;
+            var translates = {top: 35, left: 35};
         
-            var ruler = d3.select(".line-chart-container")
-                .append("div")
-                .attr("class", "ruler");
+            matrixChart = d3.select("#grid")
+                .append("svg")
+                .attr("class", "matrix-chart")
+                .attr("width", matrix_size+translates.left)
+                .attr("height", matrix_size+translates.top);
+            
+            matrix_xScale = d3.scaleBand()
+                .domain(d3.range(0, matrix_legend.length))
+                .range([0, matrix_size])
+                .paddingInner(padding);
+
+            matrix_yScale = d3.scaleBand()
+                .domain(d3.range(0, matrix_legend.length))
+                .range([0, matrix_size])
+                .paddingInner(padding);
+        
+            matrix_xAxis = d3.axisTop(matrix_yScale).tickSize(0);
+
+            matrix_yAxis = d3.axisLeft(matrix_xScale).tickSize(0);
+
+            iconDim = 12.5;
+        
+            matrixChart.append("g")
+                .attr("class", "matrix-x matrix-axis")
+                .attr("transform", "translate("+translates.left+",-5)")
+                .style("opacity", "0")
+                .call(matrix_xAxis);
+
+            matrixChart.append("g")
+                .attr("class", "matrix-y matrix-axis")
+                .attr("transform", "translate(-5,"+translates.top+")")
+                .style("opacity", "0")
+                .call(matrix_yAxis);
+
+//            diagonalLine = matrixChart.append("path")
+//                .attr("class", "diagonal")
+//                .attr("d", "M "+translates.left+" "+translates.top+" L "+matrix_size+" "+matrix_size)
+//                .attr("stroke", "url(diagonalGradient)")
+//                .attr("stroke-width", 1)
+////                .attr("stroke-opacity", 0.5)
+////                .style("stroke-dasharray", ("10, 6"))
+//                .attr("fill", "none")
+//                .style("opacity", "0");
+        
+            allSquares = matrixChart.append("g")
+                .attr("class", "allSquares")
+                .attr("transform", "translate("+translates.left+","+translates.top+")");
+
+            toolTip = d3.tip()
+                .attr("class", "d3-tip")
+                .offset([0,0])
+                .html(function(d) {
+                    return "<div><h3>"+matrix_legend[d.col].split(":")[1]+" x "+matrix_legend[d.row].split(":")[1]+"</h4><h4>"+cityNameArray[parseInt(d.city)]+"</h4><h5>The combo of <strong>"+matrix_legend[d.col].split(":")[1]+"</strong> and <strong>"+matrix_legend[d.row].split(":")[1]+"</strong> appears "+((d.cor)*100).toFixed(2)+"% in the city of <strong>"+cityNameArray[parseInt(d.city)]+"</strong>, with the most common color combo being <strong>"+d.comboColor+".</strong></h5></div>";
+                });
+        
+            matrixChart.call(toolTip);
+        
+            formatTicks(iconDim);
+        
 
 
         });
@@ -555,14 +701,16 @@ $(document).ready(function() {
 
 
     function updateChernoff(quarter, sort) {
+        
         // filter data based on quarter
+        
         var dataFiltered = chernoff_nested.filter(function(d) {
             return d.key == quarter;
         });
-
-//        console.log(dataFiltered);
         
         var dominant = [];
+        
+        // calculate the dominant style
         
         dataFiltered[0].values.forEach(function(d) {
             var city_object = {
@@ -627,7 +775,7 @@ $(document).ready(function() {
                 if (c.clothing_category == "Shirt") { shirt_count = shirt_count + 1; }
                 if (c.clothing_category == "Sweater") { sweater_count = sweater_count + 1; }
                 if (c.clothing_category == "Suit") { suit_count = suit_count + 1; }
-                if (c.clothing_category == "outerwear") { outerwear_count = outerwear_count + 1; }
+                if (c.clothing_category == "Outerwear") { outerwear_count = outerwear_count + 1; }
                 if (c.clothing_category == "Dress") { dress_count = dress_count + 1; }
                 
                 if (c.clothing_pattern == "Floral") { floral_count = floral_count + 1; }
@@ -651,7 +799,9 @@ $(document).ready(function() {
                 else if (c.major_color == "Orange") { orange_count = orange_count + 1; }
                 else if (c.major_color == "More than 1 color") { colorful_count = colorful_count + 1; }
                 
-            });       
+            });
+            
+            // hat dominant
             
             if ((hat_count / d.values.length) < 0.1) {
                 city_object.wearing_hat = "No";
@@ -659,11 +809,15 @@ $(document).ready(function() {
                 city_object.wearing_hat = "Yes";
             }
             
+            // glasses dominant
+            
             if ((glasses_count / d.values.length) < 0.1) {
                 city_object.wearing_glasses = "No";
             } else {
                 city_object.wearing_glasses = "Yes";
             }
+            
+            // scarf dominant
             
             if ((scarf_count / d.values.length) < 0.1) {
                 city_object.wearing_scarf = "No";
@@ -671,102 +825,143 @@ $(document).ready(function() {
                 city_object.wearing_scarf = "Yes";
             }
             
+            // necktie dominant
+            
             if ((necktie_count / d.values.length) < 0.1) {
                 city_object.wearing_necktie = "No";
             } else {
                 city_object.wearing_necktie = "Yes";
             }
             
-            if (folded_count == Math.max(folded_count, round_count, vshape_count)) {
-                city_object.neckline_shape = "Folded";
-            }
-            else if (round_count == Math.max(folded_count, round_count, vshape_count)) {
-                city_object.neckline_shape = "Round";
-            }
-            else if (vshape_count == Math.max(folded_count, round_count, vshape_count)) {
+            // neckline shape dominant
+            
+            if ((vshape_count / d.values.length) > 0.1) {
                 city_object.neckline_shape = "V-shape";
             }
-            
-            if (tanktop_count == Math.max(tanktop_count, tshirt_count, shirt_count, sweater_count, suit_count, outerwear_count, dress_count)) {
-                city_object.clothing_category = "Tank top";
-            }
-            else if (tshirt_count == Math.max(tanktop_count, tshirt_count, shirt_count, sweater_count, suit_count, outerwear_count, dress_count)) {
-                city_object.clothing_category = "T-shirt";
-            }
-            else if (shirt_count == Math.max(tanktop_count, tshirt_count, shirt_count, sweater_count, suit_count, outerwear_count, dress_count)) {
-                city_object.clothing_category = "Shirt";
-            }
-            else if (sweater_count == Math.max(tanktop_count, tshirt_count, shirt_count, sweater_count, suit_count, outerwear_count, dress_count)) {
-                city_object.clothing_category = "Sweater";
-            }
-            else if (suit_count == Math.max(tanktop_count, tshirt_count, shirt_count, sweater_count, suit_count, outerwear_count, dress_count)) {
-                city_object.clothing_category = "Suit";
-            }
-            else if (outerwear_count == Math.max(tanktop_count, tshirt_count, shirt_count, sweater_count, suit_count, outerwear_count, dress_count)) {
-                city_object.clothing_category = "outerwear";
-            }
-            else if (dress_count == Math.max(tanktop_count, tshirt_count, shirt_count, sweater_count, suit_count, outerwear_count, dress_count)) {
-                city_object.clothing_category = "Dress";
+            else {
+                if (folded_count == Math.max(folded_count, round_count, vshape_count)) {
+                    city_object.neckline_shape = "Folded";
+                }
+                else if (round_count == Math.max(folded_count, round_count, vshape_count)) {
+                    city_object.neckline_shape = "Round";
+                }
+                else if (vshape_count == Math.max(folded_count, round_count, vshape_count)) {
+                    city_object.neckline_shape = "V-shape";
+                }
             }
             
-            if (floral_count == Math.max(floral_count, spotted_count, graphics_count, striped_count, plaid_count, solid_count)) {
-                city_object.clothing_pattern = "Floral";
+            // clothing category dominant
+            
+            if ((tshirt_count / d.values.length) >= 0.25 || (shirt_count / d.values.length) >= 0.25) {
+                if ((tshirt_count / d.values.length) > (shirt_count / d.values.length)) {
+                    city_object.clothing_category = "T-shirt";
+                }
+                else {
+                    city_object.clothing_category = "Shirt";
+                }
             }
-            else if (spotted_count == Math.max(floral_count, spotted_count, graphics_count, striped_count, plaid_count, solid_count)) {
-                city_object.clothing_pattern = "Spotted";
+            else {
+                if ((outerwear_count / d.values.length) >= 0.4) {
+                    city_object.clothing_category = "Outerwear";
+                }
+                else {
+                    if ((dress_count / d.values.length) >= 0.15) {
+                        city_object.clothing_category = "Dress";
+                    }
+                    else {
+                        if ((tanktop_count / d.values.length) >= 0.08 ) {
+                            city_object.clothing_category = "Tank top";
+                        }
+                        else {
+                            if (sweater_count == Math.max(sweater_count, suit_count)) {
+                                city_object.clothing_category = "Sweater";
+                            }
+                            else if (suit_count == Math.max(sweater_count, suit_count)) {
+                                city_object.clothing_category = "Suit";
+                            }
+                        }
+                    }
+                }
             }
-            else if (graphics_count == Math.max(floral_count, spotted_count, graphics_count, striped_count, plaid_count, solid_count)) {
-                city_object.clothing_pattern = "Graphics";
-            }
-            else if (striped_count == Math.max(floral_count, spotted_count, graphics_count, striped_count, plaid_count, solid_count)) {
-                city_object.clothing_pattern = "Striped";
-            }
-            else if (plaid_count == Math.max(floral_count, spotted_count, graphics_count, striped_count, plaid_count, solid_count)) {
-                city_object.clothing_pattern = "Plaid";
-            }
-            else if (solid_count == Math.max(floral_count, spotted_count, graphics_count, striped_count, plaid_count, solid_count)) {
+            
+            // clothing pattern dominant
+            
+            if ((solid_count / d.values.length) >= 0.7) {
                 city_object.clothing_pattern = "Solid";
             }
+            else {
+                if ((graphics_count / d.values.length) >= 0.18) {
+                    city_object.clothing_pattern = "Graphics";
+                }
+                else {
+                    if ((spotted_count / d.values.length) >= 0.03) {
+                        city_object.clothing_pattern = "Spotted";
+                    }
+                    else {
+                        if ((plaid_count / d.values.length) >= 0.06) {
+                            city_object.clothing_pattern = "Plaid";
+                        }
+                        else {
+                            if (floral_count == Math.max(floral_count, striped_count)) {
+                                city_object.clothing_pattern = "Floral";
+                            }
+                            else if (striped_count == Math.max(floral_count, striped_count)) {
+                                city_object.clothing_pattern = "Striped";
+                            }
+                        }
+                    }
+                }
+            }
             
-            if (white_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "White";
+            // color dominant
+            
+            if ((white_count / d.values.length) >= 0.25 || (black_count / d.values.length) >= 0.25) {
+                if ((white_count / d.values.length) > (black_count / d.values.length)) {
+                    city_object.major_color = "White";
+                }
+                else {
+                    city_object.major_color = "Black";
+                }
             }
-            else if (black_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "Black";
+            else {
+                if ((colorful_count / d.values.length) >= 0.15 || (blue_count / d.values.length) >= 0.15) {
+                    if ((colorful_count / d.values.length) > (blue_count / d.values.length)) {
+                        city_object.major_color = "More than 1 color";
+                    }
+                    else {
+                        city_object.major_color = "Blue";
+                    }
+                }
+                else {
+                    if (pink_count == Math.max(pink_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count)) {
+                        city_object.major_color = "Pink";
+                    }
+                    else if (red_count == Math.max(pink_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count)) {
+                        city_object.major_color = "Red";
+                    }
+                    else if (cyan_count == Math.max(pink_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count)) {
+                        city_object.major_color = "Cyan";
+                    }
+                    else if (green_count == Math.max(pink_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count)) {
+                        city_object.major_color = "Green";
+                    }
+                    else if (gray_count == Math.max(pink_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count)) {
+                        city_object.major_color = "Gray";
+                    }
+                    else if (yellow_count == Math.max(pink_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count)) {
+                        city_object.major_color = "Yellow";
+                    }
+                    else if (brown_count == Math.max(pink_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count)) {
+                        city_object.major_color = "Brown";
+                    }
+                    else if (purple_count == Math.max(pink_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count)) {
+                        city_object.major_color = "Purple";
+                    }
+                    else if (orange_count == Math.max(pink_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count)) {
+                        city_object.major_color = "Orange";
+                    }
+                }
             }
-            else if (pink_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "Pink";
-            }
-            else if (blue_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "Blue";
-            }
-            else if (red_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "Red";
-            }
-            else if (cyan_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "Cyan";
-            }
-            else if (green_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "Green";
-            }
-            else if (gray_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "Gray";
-            }
-            else if (yellow_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "Yellow";
-            }
-            else if (brown_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "Brown";
-            }
-            else if (purple_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "Purple";
-            }
-            else if (orange_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "Orange";
-            }
-            else if (colorful_count == Math.max(white_count, black_count, pink_count, blue_count, red_count, cyan_count, green_count, gray_count, yellow_count, brown_count, purple_count, orange_count, colorful_count)) {
-                city_object.major_color = "More than 1 color";
-            }  
             
             dominant.push(city_object);
             
@@ -777,9 +972,6 @@ $(document).ready(function() {
         dataSorted = dominant.sort(sort);
         
 //        console.log(dataSorted);
-        
-        var isClick = false;
-        
 
         // main body
         var person = d3.select("#chernoff")
@@ -788,11 +980,50 @@ $(document).ready(function() {
         
         var personEnter = person.enter()
             .append("div")
-            .attr("class", "city person");
+            .attr("class", "person");
         
         var personMerge = personEnter.merge(person);
         
-        d3.selectAll(".person")
+        // make the x buttons on legend work
+        d3.select(".legend1")
+            .select(".delete")
+            .on("click", function() {
+                cityStamp = [];
+                d3.selectAll(".person")
+                    .attr("major-selected", "0")
+                    .attr("secondary-selected", "0");
+
+                d3.selectAll(".personBKG")
+                    .style("box-shadow", "none");
+                clearLineChart();
+                d3.select(".instruction").style("display", "inherit");
+                d3.select(".legend2")
+                    .style("opacity", "0")
+                    .style("pointer-events", "none");
+                d3.select(".legend1")
+                    .style("opacity", "0")
+                    .style("pointer-events", "none");
+                d3.selectAll(".person")
+                    .style("opacity","1");
+                updateMatrixChart(cityStamp, timeStamp);
+            });
+        
+        d3.select(".legend2")
+            .select(".delete")
+            .on("click", function() {
+                cityStamp.pop();
+                d3.select(".legend2")
+                    .style("opacity", "0")
+                    .style("pointer-events", "none");
+                d3.select(".line2").html("");
+                d3.select(".dots2").html("");
+                d3.selectAll(".person")
+                    .attr("secondary-selected", "0");
+                updateMatrixChart(cityStamp, timeStamp);
+            });
+        
+        
+       personMerge
             .attr("data-gender", function(d) {
                 if (d.clothing_category == "Dress") {
                     return 1;
@@ -804,19 +1035,134 @@ $(document).ready(function() {
             .attr("data-race", function(d) {
                 return Math.floor(Math.random() * 3);
             })
+            .attr("major-selected", function(d) {
+                if(d.city_id == cityStamp[0]) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            })
+            .attr("secondary-selected", function(d) {
+                if(d.city_id == cityStamp[1]) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            })
             .on("click", function(d) {
-                if (isClick == false) { isClick = true; }
-                else { isClick = false; }
+                d3.selectAll(".instruction")
+                    .style("display", "none");
             
-                cityStamp = d.city_id;
-//                console.log(d.city_id);
-                updateLineChart(cityStamp, filterStamp);
-                updateSimilarityChart(d.city_id, isClick);
-            
-//                d3.selectAll(".person").style("opacity", "0.5");
-//                d3.select(this).style("opacity", "1");
-            });
+                if (d3.select(this).attr("major-selected") == "0") {
+                    if (cityStamp.length < 1) {
+                        d3.selectAll(".person")
+                            .attr("major-selected", "0");
 
+                        d3.select(this)
+                            .attr("major-selected", "1");
+                        
+                        d3.select(this).select(".personBKG")
+                            .style("box-shadow", "0 0 8px 0 #000000");
+
+                        cityStamp = [d.city_id];
+                        d3.select("#chernoff_title").text("The Similarities of "+cityNameArray[cityStamp[0]]+"'s Style of "+ timeline[sliderValue-1]);
+                        updateSimilarityChart(cityStamp);
+                    } else {
+                        if (cityStamp.length > 1) {
+                            cityStamp.pop();
+                            d3.select(".legend2")
+                                .style("opacity", "0")
+                                .style("pointer-events", "none");
+                        }
+                        
+                        if (d3.select(this).attr("secondary-selected") != "1") {
+                            d3.selectAll(".person")
+                                .attr("secondary-selected", "0");
+                            d3.select(this)
+                                .attr("secondary-selected", "1");
+                            cityStamp.push(d.city_id);
+                        } else {
+                            clearLineChart();
+                            d3.selectAll(".person")
+                                .attr("secondary-selected", "0");    
+                        }
+                        
+                        d3.selectAll(".personBKG")
+                            .style("box-shadow", function(d) {
+                                if (d3.select(this.parentNode).attr("secondary-selected") == "0" && d3.select(this.parentNode).attr("major-selected") == "0") {
+                                    return "none";
+                                } else if (d3.select(this.parentNode).attr("major-selected") == "1") {
+                                    return "0 0 8px 0 #000000";
+                                } else {
+                                    return "0 0 8px 0 #2d07ca";
+                                }
+                            });
+                    }
+                } else {
+                    cityStamp = [];
+                    d3.select("#chernoff_title").text("The Most Popular Styles of "+ timeline[sliderValue-1]);
+                    d3.selectAll(".person")
+                        .attr("major-selected", "0")
+                        .attr("secondary-selected", "0");
+                    
+                    d3.selectAll(".personBKG")
+                        .style("box-shadow", "none");
+                    clearLineChart();
+                    d3.select(".instruction").style("display", "inherit");
+                    d3.select(".legend2")
+                        .style("opacity", "0")
+                        .style("pointer-events", "none");
+                    d3.select(".legend1")
+                        .style("opacity", "0")
+                        .style("pointer-events", "none");
+                    d3.selectAll(".person")
+                        .style("opacity","1");
+                }
+                
+           
+                console.log(cityStamp);
+                updateLegend(cityStamp);
+                if (cityStamp.length > 0) {
+                    updateLineChart(cityStamp, filterStamp);   
+                }
+                updateMatrixChart(cityStamp, timeStamp);  
+            })
+            .select(".personBKG")
+            .style("box-shadow", function(d) {
+                if(d.city_id == cityStamp[0]) {
+                    return "0 0 8px 0 #000000";
+                } else if (d.city_id == cityStamp[1]) {
+                    return "0 0 8px 0 #2d07ca";
+                } else {
+                    return "none";
+                }
+            });
+//            .on("dblclick", function(d) {
+//                d3.selectAll(".instruction, .instruction-text")
+//                    .style("display", "none");
+//                
+//                original_opacity = "1";
+//            
+//                if (d3.select(this).attr("data-selected") == "0") {
+//                    d3.selectAll(".person")
+//                        .attr("data-selected", "0");
+//                    
+//                    d3.select(this)
+//                        .attr("data-selected", "1");
+//                }
+//                else {
+//                    d3.select(this)
+//                        .attr("data-selected", "0");
+//                }
+//            
+//                cityStamp = [d.city_id];
+//            
+//                updateSimilarityChart(cityStamp);
+//            });
+        
+        var personBKG = personEnter.append("div")
+            .attr("class", "personBKG");
+        
         var headContainer = personEnter.append("div")
             .attr("class", "head head-position")
             .style("text-align", "center");
@@ -1561,7 +1907,7 @@ $(document).ready(function() {
 
         personMerge.select(".outerwear")
             .style("opacity", function(d) {
-                if (d.clothing_category == "outerwear") {
+                if (d.clothing_category == "Outerwear") {
                     return "1";
                 }
                 else {
@@ -2109,7 +2455,7 @@ $(document).ready(function() {
             .attr("text-anchor", "middle")
             .attr("fill", "#000")
             .style("font-size", "10px")
-            .style("font-family", "Avenir")
+            .style("font-family", "'Josefin Sans', sans-serif")
             .style("letter-spacing", "1px")
             .text(function(d) {
                 return cityNameArray[parseInt(d.city_id)];
@@ -2122,7 +2468,7 @@ $(document).ready(function() {
             .attr("text-anchor", "middle")
             .attr("fill", "#000")
             .style("font-size", "10px")
-            .style("font-family", "Avenir")
+            .style("font-family", "'Josefin Sans', sans-serif")
             .style("letter-spacing", "1px")
             .text(function(d) {
                 return cityNameArray[parseInt(d.city_id)];
@@ -2316,7 +2662,7 @@ $(document).ready(function() {
         
         d3.selectAll(".outerwear")
             .style("width", function(d) {
-                var outweatSize = d3.select(this).selectAll("*").node().getBBox();
+                var outerwearSize = d3.select(this).selectAll("*").node().getBBox();
                 return outerwearSize.width * 0.25 + "px";
             })
             .style("height", function(d) {
@@ -2501,7 +2847,7 @@ $(document).ready(function() {
         d3.selectAll(".person")
             .on("mouseover", function(d) {
                 var positionX = $(this).offset().left + 110;
-                var positionY = $(this).offset().top - 190;
+                var positionY = $(this).offset().top - 198;
             
                 var wearHat = "",
                     wearGlasses = "",
@@ -2517,7 +2863,7 @@ $(document).ready(function() {
             
                 tooltip.style("opacity", "1");
             
-                tooltip.html("<div class='text'><p class='tooltip-name'>" + cityNameArray[parseInt(d.city_id)] + "</p><p class='tooltip-detail'>Category: " + d.clothing_category + "</p><p class='tooltip-detail'>Pattern: " + d.clothing_pattern + "</p><p class='tooltip-detail'>Neckline Shape: " + d.neckline_shape + "</p><p class='tooltip-detail color'>Major Color: " + d.major_color + "</p><p class='tooltip-detail wearing'>Wearing " + wearHat + " " + wearGlasses + " " + wearScarf + " " + wearNecktie + "</p></div><div class='line'></div><div class='icon'><img class='icon-size' src='../image/" + d.clothing_category + ".svg'><img class='icon-size' src='../image/" + d.clothing_pattern + ".svg'><img class='icon-size' src='../image/" + d.neckline_shape + ".svg'><img class='icon-size hat-icon' src='../image/hat.svg'><img class='icon-size glasses-icon' src='../image/glasses.svg'><img class='icon-size scarf-icon' src='../image/scarf.svg'><img class='icon-size necktie-icon' src='../image/necktie.svg'></div>")
+                tooltip.html("<div class='text'><p class='tooltip-name'>" + cityNameArray[parseInt(d.city_id)] + "</p><p class='tooltip-detail'>Category: " + d.clothing_category + "</p><p class='tooltip-detail'>Pattern: " + d.clothing_pattern + "</p><p class='tooltip-detail'>Neckline Shape: " + d.neckline_shape + "</p><p class='tooltip-detail color'>Major Color: " + d.major_color + "</p><p class='tooltip-detail wearing'>Wearing " + wearHat + " " + wearGlasses + " " + wearScarf + " " + wearNecktie + "</p><p class='cue'></p></div><div class='line'></div><div class='icon'><img class='icon-size' src='../image/" + d.clothing_category + ".svg'><img class='icon-size' src='../image/" + d.clothing_pattern + ".svg'><img class='icon-size' src='../image/" + d.neckline_shape + ".svg'><img class='icon-size hat-icon' src='../image/Hat.svg'><img class='icon-size glasses-icon' src='../image/Glasses.svg'><img class='icon-size scarf-icon' src='../image/Scarf.svg'><img class='icon-size necktie-icon' src='../image/Necktie.svg'><div class='color-icon-size' style='background-color: " + colors_left[d.major_color] + "'></div></div>")
                 .style("left", positionX + "px")
                 .style("top", positionY + "px");
             
@@ -2551,72 +2897,139 @@ $(document).ready(function() {
                         .html("No accessories");
                 }
             
+                if (d3.select(this).attr("major-selected") == "1") {
+                    d3.select(".cue")
+                        .html("Click to unselect");
+                }
+                else if (d3.select(this).attr("secondary-selected") == "1") {
+                    d3.select(".cue")
+                        .html("Click to cancel");
+                }
+                else {
+                    d3.select(".cue")
+                        .html("Click to compare");
+                }
+            
+                d3.selectAll(".cue")
+                    .style("color", function() {
+                        return colors_left[d.major_color];
+                    });
+            
+                d3.select(this)
+                    .select(".personBKG")
+                    .style("opacity", "0");
+            
+                original_opacity = d3.select(this).style("opacity");
+            
+                d3.select(this)
+                    .style("opacity", "1");
             })
             .on("mouseout", function(d) {
                 tooltip.style("opacity", "0");
+            
+                d3.select(this)
+                    .select(".personBKG")
+                    .style("opacity", "1");
+            
+                d3.select(this)
+                    .style("opacity", original_opacity);
             });
-        
         
 
     }
     
-    
-    function updateLineChart(city, filter) {
+    function updateLineChart(cities, filter) {
         
-        var dataFiltered = line_nested.filter(function(d) {
-            return d.key == city;
-        });
+        var all_datapoint = [];
         
-//        console.log(dataFiltered);
-        
-        var dataSorted = dataFiltered[0].values.sort(timeSort);
-        
-//        console.log(dataSorted);
-        
-        var datapoint = [];
-        
-        dataSorted.forEach(function(d) {
-            var count = 0;
-            var percentage = 0;
+        line_nested.forEach(function(d) {
+            var dataSorted = d.values.sort(timeSort);
             
-            d.values.forEach(function(c) {
-                if (c.clothing_category == filter) { count = count + 1; }
-                if (c.neckline_shape == filter) { count = count + 1; }
+            var dataitem = {};
+            
+            var datapoint = [];
+            
+            dataSorted.forEach(function(c) {
+                var datapointObj = {};
+                var count = 0;
+                var percentage = 0;
                 
+                c.values.forEach(function(e) {
+                    if (e.clothing_category == filter) { count = count + 1; }
+                    if (e.clothing_pattern == filter) { count = count + 1; }
+                    if (e.major_color == filter) { count = count + 1; }
+                    if (e.neckline_shape == filter) { count = count + 1; }
+                    
+                    if (filter == "Hat") {
+                        if (e.wearing_hat == "Yes") { count = count + 1; }
+                    }
+                    if (filter == "Glasses") {
+                        if (e.wearing_glasses == "Yes") { count = count + 1; }
+                    }
+                    if (filter == "Scarf") {
+                        if (e.wearing_scarf == "Yes") { count = count + 1; }
+                    }
+                    if (filter == "Necktie") {
+                        if (e.wearing_necktie == "Yes") { count = count + 1; }
+                    }
+
+                });
+
+                percentage = count / c.values.length;
+                
+                datapointObj.city = c.values[0].city_id;
+                datapointObj.time = c.key;
+                datapointObj.count = count;
+                datapointObj.total = c.values.length;
+                datapointObj.percentage = percentage;
+
+                datapoint.push(datapointObj);
             });
+
+            dataitem.city = d.key;
+            dataitem.values = datapoint;
             
-            percentage = count / d.values.length;
-            
-            datapoint.push(percentage);
+            all_datapoint.push(dataitem);
         });
         
-//        console.log(datapoint);
+        console.log(all_datapoint);
         
-        var xExtent = d3.extent(datapoint, function(d) {
-            return d;
+        var dataFiltered = all_datapoint.filter(function(d) {
+            return d.city == cities[0] || d.city == cities[1];
         });
         
-//        console.log(xExtent);
+        if (dataFiltered.length == 2) {
+            var city_data_1 = dataFiltered[0].values;
+            var city_data_2 = dataFiltered[1].values;
+            
+            all_datapoint_concat = city_data_1.concat(city_data_2);
+        }
+        else if (dataFiltered.length == 1) {
+            var city_data_1 = dataFiltered[0].values;
+            
+            all_datapoint_concat = city_data_1;
+        }
+        else {
+            var city_data_1 = [];
+            all_datapoint_concat = [];
+        }
         
-        var xScale = d3.scaleLinear()
+        xExtent = d3.extent(all_datapoint_concat, function(d) {
+            return d.percentage;
+        });
+
+        xScale = d3.scaleLinear()
             .domain(xExtent)
-            .range([10, 370]);
-        
-        var yScale = d3.scaleLinear()
+            .range([20, 380]);
+
+        yScale = d3.scaleLinear()
             .domain([0, 10])
             .range([50, 570]);
-        
-        xAxis = d3.axisTop(xScale)
-            .ticks(7)
+
+        xAxis = d3.axisBottom(xScale)
+            .ticks(5)
             .tickFormat(d3.format(".0%"));
-        
-//        var yAxis = d3.axisRight(yScale);
-//        
-//        lineChart.append("g")
-//            .attr("class", "axis")
-//            .attr("transform", "translate(360, 0)")
-//            .call(yAxis);
-        
+            
         var lineInterpolate = d3.line()
             .x(function(d) {
                 return xScale(d);
@@ -2624,75 +3037,598 @@ $(document).ready(function() {
             .y(function(d, i) {
                 return yScale(i);
             });
-        
-        var line = lineContainer.selectAll(".line-plot")
-            .data([datapoint])
-            .enter()
+
+        var line1 = lineContainer1.selectAll(".line-plot")
+            .data([city_data_1.map(function(d) { return d.percentage; })]);
+
+        var lineEnter1 = line1.enter()
             .append("path")
-            .attr("class", "line-plot")
-            .attr("d", lineInterpolate);
+            .attr("class", "line-plot plot1");
         
-        d3.select(".line-plot")
+        d3.selectAll(".plot1")
             .transition()
             .duration(500)
             .attr("d", lineInterpolate);
+        
+        var dot1 = dotContainer1.selectAll(".dot")
+            .data(city_data_1);
+        
+//        console.log(all_datapoint[0]);
+
+        var dotEnter1 = dot1.enter()
+            .append("circle")
+            .attr("class", "dot dot1");
+        
+        d3.selectAll(".dot1")
+            .transition()
+            .duration(500)
+            .attr("r", "5")
+            .attr("cx", function(d) { return xScale(d.percentage); })
+            .attr("cy", function(d, i) { return yScale(i); });
+        
+        if (dataFiltered.length == 2) {
+            var line2 = lineContainer2.selectAll(".line-plot")
+                .data([city_data_2.map(function(d) { return d.percentage; })]);
+
+            var lineEnter2 = line2.enter()
+                .append("path")
+                .attr("class", "line-plot plot2");
+
+            d3.selectAll(".plot2")
+                .transition()
+                .duration(500)
+                .attr("d", lineInterpolate);
+
+            var dot2 = dotContainer2.selectAll(".dot")
+                .data(city_data_2);
+
+            var dotEnter2 = dot2.enter()
+                .append("circle")
+                .attr("class", "dot dot2");
+
+            d3.selectAll(".dot2")
+                .transition()
+                .duration(500)
+                .attr("r", "5")
+                .attr("cx", function(d) { return xScale(d.percentage); })
+                .attr("cy", function(d, i) { return yScale(i); });
+        }
         
         d3.select(".x")
             .transition()
             .duration(500)
-            .call(xAxis);   
+            .style("opacity", "1")
+            .call(xAxis); 
         
-        var dot = dotContainer.selectAll(".dot")
-            .data(datapoint);
-        
-        var dotEnter = dot.enter()
-            .append("circle")
-            .attr("class", "dot")
-            .attr("r", "5")
-            .attr("cx", function(d) { return xScale(d); })
-            .attr("cy", function(d, i) { return yScale(i); });
-        
-        var dotMerge = dotEnter.merge(dot);
-        
-        dotMerge.transition()
-            .duration(500)
-            .attr("cx", function(d) { return xScale(d); })
-            .attr("cy", function(d, i) { return yScale(i); });
-        
-        d3.selectAll(".dot")
-            .on("mouseover", function(d) {
-                var positionX = $(this).offset().left - 965;
-                var positionY = $(this).offset().top - 380;
+        d3.select(".ruler")
+            .style("opacity", "1");
+            
+        d3.selectAll(".dot1")
+            .on("mouseover", function(d, i) {
+                var positionX = $(this).offset().left - 970;
+                var positionY = $(this).offset().top - 350;
+            
+                var linetip_title = filter.toUpperCase();
+            
+                var linetip_time = timeline[i];
+            
+                var cityMaxSign = "";
+                var cityMinSign = "";
+            
+                var city_max_percentage = 0;
+                var city_min_percentage = 1;
+            
+                all_datapoint.forEach(function(c) {
+                    var data = c.values.filter(function(e) {
+                        return e.time == d.time;
+                    });
+                    
+                    var percentage = data[0].percentage;
+                    
+                    if (city_max_percentage <= percentage) {
+                        city_max_percentage = percentage;
+                        cityMaxSign = data[0].city;
+                    }
+                    
+                });
+            
+                all_datapoint.forEach(function(c) {
+                    var data = c.values.filter(function(e) {
+                        return e.time == d.time;
+                    });
+                    
+                    var percentage = data[0].percentage;
+                    
+                    if (city_min_percentage >= percentage) {
+                        city_min_percentage = percentage;
+                        cityMinSign = data[0].city;
+                    }
+                    
+                });
+            
+                city_max_percentage = (city_max_percentage * 100).toFixed(0);
+                city_min_percentage = (city_min_percentage * 100).toFixed(0);
+            
+                if (dataFiltered.length == 1) {
+                    var city_percentage_1 = (d.percentage * 100).toFixed(0);
+                    
+                    linetip
+                        .html(function() {
+                            return "<p class='linetip-title'>" + linetip_title + "</p><p class='linetip-time'>" + linetip_time + "</p><p class='linetip-subtitle'>This / Total of bloggers</p><p class='linetip-content'>" + cityNameArray[parseInt(d.city)] + " : " + d.count + " / " + d.total + " (" + city_percentage_1 + "%)</p><div class='linetip-line'></div><p class='linetip-subtitle'>Cities with Max/Min% of this</p><p class='linetip-content'>" + cityNameArray[parseInt(cityMaxSign)] + " : " + city_max_percentage + "%</p><p class='linetip-content'>" + cityNameArray[parseInt(cityMinSign)] + " : " + city_min_percentage + "%</p>";
+                        });
+                }
+                else if (dataFiltered.length == 2) {
+                    var city_percentage_1 = (d.percentage * 100).toFixed(0);
+                    
+                    var another_city = dataFiltered[1].values.filter(function(c) {
+                        return c.time == d.time;
+                    });
+                    
+                    var city_percentage_2 = (another_city[0].percentage * 100).toFixed(0);
+                    
+                    linetip
+                        .html(function() {
+                            return "<p class='linetip-title'>" + linetip_title + "</p><p class='linetip-time'>" + linetip_time + "</p><p class='linetip-subtitle'>This / Total of bloggers</p><p class='linetip-content'>" + cityNameArray[parseInt(d.city)] + " : " + d.count + " / " + d.total + " (" + city_percentage_1 + "%)</p><p class='linetip-content'>" + cityNameArray[parseInt(another_city[0].city)] + " : " + another_city[0].count + " / " + another_city[0].total + " (" + city_percentage_2 + "%)</p><div class='linetip-line'></div><p class='linetip-subtitle'>Cities with Max/Min% of this</p><p class='linetip-content'>" + cityNameArray[parseInt(cityMaxSign)] + " : " + city_max_percentage + "%</p><p class='linetip-content'>" + cityNameArray[parseInt(cityMinSign)] + " : " + city_min_percentage + "%</p>";
+                        });
+                }
             
                 d3.select(this)
                     .attr("r", "10");
             
-                linetip.style("opacity", "1");
-            
                 linetip.style("left", positionX + "px")
-                    .style("top", positionY + "px");
+                    .style("top", positionY + "px")
+                    .style("display", "block");
             })
             .on("mouseout", function(d) {
                 d3.select(this)
                     .attr("r", "5");
+
+                linetip.style("display", "none");
+            });
+        d3.selectAll(".dot2")
+            .on("mouseover", function(d, i) {
+                var positionX = $(this).offset().left - 970;
+                var positionY = $(this).offset().top - 350;
             
-                linetip.style("opacity", "0");
+                var linetip_title = filter.toUpperCase();
+            
+                var linetip_time = timeline[i];
+            
+                var cityMaxSign = "";
+                var cityMinSign = "";
+            
+                var city_max_percentage = 0;
+                var city_min_percentage = 1;
+            
+                all_datapoint.forEach(function(c) {
+                    var data = c.values.filter(function(e) {
+                        return e.time == d.time;
+                    });
+                    
+                    var percentage = data[0].percentage;
+                    
+                    if (city_max_percentage <= percentage) {
+                        city_max_percentage = percentage;
+                        cityMaxSign = data[0].city;
+                    }
+                    
+                });
+            
+                all_datapoint.forEach(function(c) {
+                    var data = c.values.filter(function(e) {
+                        return e.time == d.time;
+                    });
+                    
+                    var percentage = data[0].percentage;
+                    
+                    if (city_min_percentage >= percentage) {
+                        city_min_percentage = percentage;
+                        cityMinSign = data[0].city;
+                    }
+                    
+                });
+            
+                city_max_percentage = (city_max_percentage * 100).toFixed(0);
+                city_min_percentage = (city_min_percentage * 100).toFixed(0);
+            
+                var city_percentage_1 = (d.percentage * 100).toFixed(0);
+                    
+                var another_city = dataFiltered[0].values.filter(function(c) {
+                    return c.time == d.time;
+                });
+
+                var city_percentage_2 = (another_city[0].percentage * 100).toFixed(0);
+
+                linetip
+                    .html(function() {
+                        return "<p class='linetip-title'>" + linetip_title + "</p><p class='linetip-time'>" + linetip_time + "</p><p class='linetip-subtitle'>This / Total of bloggers</p><p class='linetip-content'>" + cityNameArray[parseInt(d.city)] + " : " + d.count + " / " + d.total + " (" + city_percentage_1 + "%)</p><p class='linetip-content'>" + cityNameArray[parseInt(another_city[0].city)] + " : " + another_city[0].count + " / " + another_city[0].total + " (" + city_percentage_2 + "%)</p><div class='linetip-line'></div><p class='linetip-subtitle'>Cities with Max/Min% of this</p><p class='linetip-content'>" + cityNameArray[parseInt(cityMaxSign)] + " : " + city_max_percentage + "%</p><p class='linetip-content'>" + cityNameArray[parseInt(cityMinSign)] + " : " + city_min_percentage + "%</p>";
+                    });
+
+                d3.select(this)
+                    .attr("r", "10");
+            
+                linetip.style("left", positionX + "px")
+                    .style("top", positionY + "px")
+                    .style("display", "block");
+            })
+            .on("mouseout", function(d) {
+                d3.select(this)
+                    .attr("r", "5");
+
+                linetip.style("display", "none");
             });
         
-        
+        d3.select(".legend-container")
+            .style("opacity", "1");
 
     }
     
-    function updateSimilarityChart(city, isClick) {
-        if (isClick == true) {
-            console.log(dataSorted);
-        
-            var select_city = dataSorted.filter(function(d) {
-                return d.city_id == city;
+    function clearLineChart() {
+        d3.select(".line1").html("");
+        d3.select(".line2").html("");
+        d3.select(".dots1").html("");
+        d3.select(".dots2").html("");
+        d3.select(".ruler").style("opacity","0");
+        d3.select(".line-chart").select(".axis").style("opacity","0");
+        d3.select(".legend-container").style("opacity", "0");
+    }
+    
+    function updateMatrixChart(cities, quarter) {
+        if (cities.length < 3) {
+            
+            d3.select(".matrix-instructions")
+                .style("opacity", "1");
+            d3.select("#imageBox")
+                .style("opacity", "1");
+            
+            var dataFilter = line_nested.filter(function(d) {
+                if (cities.length == 2) {
+                    return d.key == cities[0] || d.key == cities[1]
+                } else if (cities.length == 1) {
+                    return d.key == cities[0];
+                } else {
+                    return [];
+                }
             });
 
-            console.log(select_city);
-            console.log(select_city[0].major_color);
+    //        console.log(dataFilter);
+
+            var dataFiltered = [];
+
+            for (var i = 0; i < dataFilter.length; i++) {
+                var arr = dataFilter[i].values.filter(function (d) {
+                    if (d.key == quarter) {
+                        return d.values;
+                    }
+                });
+    //            console.log(arr);
+                dataFiltered = dataFiltered.concat(arr[0].values);
+            }
+
+    //        var arr1 = dataFilter[0].values.filter(function (d) {
+    //            if (d.key == quarter) {
+    //                return d.values;
+    //            }
+    //        });
+    //        
+    ////        console.log(arr1);
+    //        
+    //        var arr2 = dataFilter[1].values.filter(function (d) {
+    //            if (d.key == quarter) {
+    //                return d.values;
+    //            }
+    //        });
+    //        
+    //        console.log(arr2);                                               
+    //        
+    //        var dataFiltered = arr1[0].values.concat(arr2[0].values);
+
+    //        console.log(dataFiltered);
+
+            var size = dataFiltered.length;
+
+            var dataStore = new Array(matrix_legend.length);
+
+            for (var i = 0; i < dataStore.length; i++) {
+                dataStore[i] = new Array(dataStore.length);
+
+                for (var j = 0; j < dataStore.length; j++) {
+                    dataStore[i][j] = {
+                        "value" : 0,
+                        "image" : [],
+                        "Red" : 0,
+                        "Black": 0,
+                        "Blue": 0,
+                        "Pink": 0,
+                        "Green": 0,
+                        "Gray": 0,
+                        "Orange": 0,
+                        "Yellow": 0,
+                        "White": 0,
+                        "Brown": 0,
+                        "Purple": 0
+                    };
+                }
+            }
+
+            dataFiltered.forEach(function(a) {
+                for (var i = 0; i < dataStore.length; i++) { 
+                    for (var j = 0; j < dataStore.length; j++) {
+                        if ((a.city_id == cities[0] && i >= j) || a.city_id == cities[1] && j >= i) {
+                            var i_test = "Yes";
+                            var j_test = "Yes";
+                            if (matrix_legend[i].split(":")[0] == "clothing_category" || matrix_legend[i].split(":")[0] == "clothing_pattern") {
+                                i_test = matrix_legend[i].split(":")[1];
+                            }
+                            if (matrix_legend[j].split(":")[0] == "clothing_category" || matrix_legend[j].split(":")[0] == "clothing_pattern") {
+                                j_test = matrix_legend[j].split(":")[1];
+                            }
+                            if (a[matrix_legend[i].split(":")[0]] == i_test && a[matrix_legend[j].split(":")[0]] == j_test) {
+                                dataStore[i][j]["value"] += 1/size; // add a % of pop count
+                                dataStore[i][j]["image"].push(a.url.split("/").pop());
+                                if (a["major_color"] != "" && a["major_color"] != "More than 1 color") {    // tally color count
+                                    dataStore[i][j][a["major_color"]] += 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+    //        console.log(dataStore);
+            var newData = createDataset(dataStore, cities);
+    //        console.log(newData);
+//            document.getElementById("imageBox").innerHTML = "<p>Click a combo cell to see images.</p><div><img src='image/placeholder.jpg' /><img src='image/placeholder.jpg' /><img src='image/placeholder.jpg' /></div>";
+
+            var squares = allSquares.selectAll(".squareContainer")
+                .data(newData);
+
+            var squareEnter = squares.enter()
+                .append("g")
+                .attr("class", "squareContainer");
+
+            var squaresAdd = squareEnter.append("rect")
+                .attr("width", matrix_xScale.bandwidth())
+                .attr("height", matrix_yScale.bandwidth())
+                .attr("class", "square");
+
+            squares.merge(squareEnter)
+                .attr("transform", function(d) {
+                    return "translate("+matrix_xScale(d.row)+", "+matrix_yScale(d.col)+")";
+                })
+                .select(".square")
+                .style("fill-opacity", 0.01)
+                .attr("class", function(d) {
+                    if (d.comboColor == "White") {
+                        return "square whiteSquare";
+                    } else {
+                        return "square";
+                    }
+                })
+                .attr("id", function(d) {
+                    return "n"+d.row +"-"+d.col;
+                })
+                .on("click", function(d) {
+                    if (d3.select(this).classed("selected")) {
+                        d3.select(this).classed("selected", false);
+                        d3.select("#imageBox").select("p").text("Click a combo cell to see images.");
+                        d3.select("#imageBox").selectAll("a").attr('href','image/placeholder.jpg');
+                        d3.select("#imageBox").selectAll("img").attr('src','image/placeholder.jpg');
+                    } else {
+                        d3.selectAll(".square").classed("selected", false)
+                            .style("stroke", function(d) {
+                                if(!d3.select(this).classed("whiteSquare")) {
+                                    return "none";
+                                } else {
+                                    d3.select(this).style("stroke-width","0.2px");
+                                    return "#8F8F8F";
+                                }
+                            });
+                        document.getElementById("imageHolder").innerHTML = "";
+                        d3.select(this).classed("selected", true)
+                            .style("stroke","#000")
+                            .style("stroke-width","2px")
+                            .style("stroke-opacity", 1);
+                        showImages(d);
+                    }
+                })
+                .on("mouseover", function(d) {
+                    toolTip.show(d);    
+                    d3.select(this).style("stroke", "#000").style("stroke-width","2px");
+                    d3.select("#n"+d.col+"-"+d.row).style("stroke", "#000");
+                    d3.select(this.parentNode).selectAll(".guideline").attr("opacity", 0.2);
+                })
+                .on("mouseout", function(d) {
+                    toolTip.hide(d);
+                    d3.select("#n"+d.col+"-"+d.row).style("stroke", "none");
+                    d3.select(this.parentNode).selectAll(".guideline").attr("opacity", 0);
+                    if (!d3.select(this).classed("selected")) {
+                        if (!d3.select(this).classed("whiteSquare")) {
+                            d3.select(this).style("stroke", "none");
+                        } else {
+                            d3.select(this).style("stroke", "#8F8F8F").style("stroke-width", "0.2px");
+                        }
+                    }
+                })
+                .transition()
+                .duration(500)
+                .style("fill", d => colors_left[d.comboColor])
+                .style("fill-opacity", function(d) {
+                    var presence = d.cor * 10;
+                    if (presence > 1) {
+                        presence = 1;
+                    } else if (presence == 0) {
+                        presence = 0.05;
+                    }
+                    return presence;
+                });
+
+            var markerLineX = squareEnter.append("rect")
+                .attr("class", "guideline")
+                .attr("height", matrix_yScale.bandwidth())
+                .attr("width", matrix_size)
+                .attr("transform", "translate("+(-matrix_size)+",0)")
+                .attr("opacity", 0);
+
+            var markerLineY = squareEnter.append("rect")
+                .attr("class", "guideline")
+                .attr("height", matrix_size)
+                .attr("width", matrix_xScale.bandwidth())
+                .attr("transform", "translate(0,"+(-matrix_size)+")")
+                .attr("opacity", 0);
+            
+            d3.select(".matrix-x")
+                .style("opacity", "1");
+            
+            d3.select(".matrix-y")
+                .style("opacity", "1");
+            
+            d3.select(".diagonal")
+                .style("opacity", "1");
+            
+            d3.select(".matrix-comparison-icon")
+                .style("opacity", "1");
+
+
+
+
+            // exit + remove functions
+            squares.exit().remove();
+        }
+    }
+
+    function createDataset(dataStore, cities) {
+        var data = [];
+        
+        for (var i = 0; i < dataStore.length; i++) {
+            for (var j = 0; j < dataStore[i].length; j++) {
+                if (i != j && dataStore[i][j]["value"] != 0) { //ignore self-referencing parts in the matrix and only include points that have a correlation value
+                    var element = {};
+                    element.cor = dataStore[i][j]["value"];
+                    element.col = i;
+                    element.row = j;
+                    var c = "Black"; //defaults to black if no color value
+                    for (var k in dataStore[i][j]) {
+                        if (k != "value" && dataStore[i][j][k] > dataStore[i][j][c]) {
+                            c = k;
+                        }
+                    }
+                    element.comboColor = c;
+                    if (i > j) {
+                        element.city = cities[0];
+                    } else {
+                        element.city = cities[1];
+                    }
+                    element.imageURL = dataStore[i][j]["image"];
+                    data.push(element);
+                }
+            }
+        }
+        return data;
+    }
+        
+    function formatTicks(iconDim) {
+
+        matrixChart.selectAll(".matrix-axis")
+            .selectAll("text")
+            .remove();
+
+        matrixChart.selectAll(".matrix-axis")
+            .selectAll(".tick")
+            .each(function (d,i) {
+                d3.select(this)
+                    .append("image")
+                    .attr("width", iconDim)
+                    .attr("height", iconDim)
+                    .attr("fill", "gray")
+                    .attr("x", function(d) {
+                        var check = this.parentElement.parentElement;
+
+                        if (check.classList.contains("x1") || check.classList.contains("matrix-x")) {
+                            return (-iconDim/2);
+                        }
+                        else if (check.classList.contains("y1")) {
+                            return (-iconDim - 8);
+                        }
+                        else if (check.classList.contains("matrix-y")) {
+                            return 8;
+                        }
+                    })
+                    .attr("y", function(d) {
+                        var check = this.parentElement.parentElement;
+
+                        if (check.classList.contains("y1") || check.classList.contains("matrix-y")) {
+                            return (-iconDim/2);
+                        } else if (check.classList.contains("x1")) {
+                            return (-iconDim - 8);
+                        } else if (check.classList.contains("matrix-x")) {
+                            return 8;
+                        }
+                    })
+                    .attr("class", "tick-icon")
+                    .attr("xlink:href", "image/" + matrix_legend[i].split(":")[1] + ".svg");
+            });
+    }
+        
+    function showImages(d) {
+        console.log("hit");
+        var urls = d.imageURL;
+        var selectedImages = [];
+        if (urls.length > 3) { // grab 3 random images
+            while (selectedImages.length < 3) {
+                var choose = Math.floor(Math.random()*urls.length);
+                var token = urls[choose];
+                if (selectedImages.indexOf(token) == -1) {
+                    selectedImages.push(token);
+                }
+            }
+        } else {
+            selectedImages = urls;
+        }
+        d3.select("#imageBox").select("p").text( matrix_legend[d.col].split(":")[1]+" x "+matrix_legend[d.row].split(":")[1]+" combos in "+cityNameArray[parseInt(d.city)]);
+        for (var i = 0; i < selectedImages.length; i++) {
+            var firstThree = selectedImages[i].substring(0,3).split("");
+            console.log(firstThree);
+            var urlString = "https://gitlab.com/joshuapyao/fashion-data/raw/master/pictures/"+firstThree[0]+"/"+firstThree[1]+"/"+firstThree[2]+"/"+selectedImages[i];
+            var lightB = document.createElement("a");
+            lightB.href = urlString;
+            lightB.setAttribute('data-lightbox', 'imagebox');
+            var img = document.createElement("img");
+            img.src = urlString;
+            img.style.width = "115px";
+            lightB.appendChild(img);
+            document.getElementById("imageHolder").appendChild(lightB);
+        }
+    }
+    
+    function updateSimilarityChart(city) {
+//        d3.selectAll(".personBKG")
+//            .style("box-shadow", function(d) {
+//                if (d3.select(this.parentNode).attr("data-selected") == "0") {
+//                    return "none";
+//                }
+//                else {
+//                    return "0 0 8px 0 #014cff";
+//                }
+//            });
+        
+        var none_selected = true;
+        d3.selectAll(".person")
+            .each(function(d) {
+                if (d3.select(this).attr("major-selected") == "1") {
+                    none_selected = false;
+                }
+            });
+        
+
+        if (none_selected == false) {
+//            console.log(dataSorted);
+        
+            var select_city = dataSorted.filter(function(d) {
+                return d.city_id == city[0];
+            });
+
+//            console.log(select_city);
+//            console.log(select_city[0].major_color);
 
             d3.selectAll(".person")
                 .attr("data-similarity", function(d) {
@@ -2700,28 +3636,31 @@ $(document).ready(function() {
 
                     if (d.clothing_category == select_city[0].clothing_category) { similarity = similarity + 1; }
 
-                    if (d.clothing_pattern == select_city[0].clothing_pattern) { similarity = similarity + 1; }
+                    if (d.clothing_pattern == select_city[0].clothing_pattern) { similarity = similarity + 0.8; }
 
-                    if (d.neckline_shape == select_city[0].neckline_shape) { similarity = similarity + 1; }
+                    if (d.neckline_shape == select_city[0].neckline_shape) { similarity = similarity + 0.4; }
 
                     if (d.major_color == select_city[0].major_color) { similarity = similarity + 1; }
 
                     if (d.wearing_hat == select_city[0].wearing_hat) { similarity = similarity + 1; }
 
-                    if (d.wearing_glasses == select_city[0].wearing_glasses) { similarity = similarity + 1; }
+                    if (d.wearing_glasses == select_city[0].wearing_glasses) { similarity = similarity + 0.8; }
 
                     if (d.wearing_scarf == select_city[0].wearing_scarf) { similarity = similarity + 1; }
 
-                    if (d.wearing_necktie == select_city[0].wearing_necktie) { similarity = similarity + 1; }
+                    if (d.wearing_necktie == select_city[0].wearing_necktie) { similarity = similarity + 0.4; }
 
                     return similarity;
                 })
                 .style("opacity", function(d) {
-                    if (d3.select(this).attr("data-similarity") >= 6) {
+                    if (d3.select(this).attr("data-similarity") >= 5) {
                         return "1";
                     }
-                    else {
+                    else if (d3.select(this).attr("data-similarity") >= 3 && d3.select(this).attr("data-similarity") < 5){
                         return "0.5";
+                    }
+                    else {
+                        return "0.1";
                     }
                 });
         }
@@ -2730,8 +3669,36 @@ $(document).ready(function() {
                 .style("opacity", "1");
         }
         
+        
+        
     }
 
+    function updateLegend(city) {
+//        console.log(city);
+//        console.log("kkk");
+        if (city.length == 1) {
+            var city_id_1 = city[0];
+            
+            d3.select(".legend1").style("opacity", "1").style("pointer-events", "auto");
+            d3.select(".legend1 .legend-text").text(cityNameArray[parseInt(city_id_1)]);       
+        } else if (city.length == 2) {
+            var city_id_2 = city[1];
+
+            d3.select(".legend2").style("opacity", "1").style("pointer-events", "auto");
+            d3.select(".legend2 .legend-text").text(cityNameArray[parseInt(city_id_2)]);
+            
+            d3.select(".legend2")
+                .transition()
+                .duration(500)
+                .style("background-color", "rgba(255, 0, 31, 0.15)")
+                .transition()
+                .duration(500)
+                .style("background-color", "rgba(255, 0, 31, 0)");
+        }
+
+        
+//        console.log(city.length); 
+    }
 
 });
 
