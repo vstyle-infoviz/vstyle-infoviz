@@ -145,7 +145,7 @@ $(document).ready(function() {
         updateChernoff(timeStamp, sortStamp);
         updateMatrixChart(cityStamp, timeStamp);
         if (cityStamp.length > 0) {
-            updateSimilarityChart(cityStamp[0]);            
+            updateSimilarityChart(cityStamp);            
         }
         d3.select(".ruler")
             .style("top", 59+(52*(sliderValue-1))+"px");
@@ -165,7 +165,7 @@ $(document).ready(function() {
         sortStamp = citySort;
         updateChernoff(timeStamp, sortStamp);
         if (cityStamp.length > 0) {
-            updateSimilarityChart(cityStamp[0]);            
+            updateSimilarityChart(cityStamp);            
         }
 
     });
@@ -184,7 +184,7 @@ $(document).ready(function() {
         sortStamp = categorySort;
         updateChernoff(timeStamp, sortStamp);
         if (cityStamp.length > 0) {
-            updateSimilarityChart(cityStamp[0]);            
+            updateSimilarityChart(cityStamp);            
         }
 
     });
@@ -203,7 +203,7 @@ $(document).ready(function() {
         sortStamp = patternSort;
         updateChernoff(timeStamp, sortStamp);
         if (cityStamp.length > 0) {
-            updateSimilarityChart(cityStamp[0]);            
+            updateSimilarityChart(cityStamp);            
         }
     });
     
@@ -221,7 +221,7 @@ $(document).ready(function() {
         sortStamp = colorSort;
         updateChernoff(timeStamp, sortStamp);
         if (cityStamp.length > 0) {
-            updateSimilarityChart(cityStamp[0]);            
+            updateSimilarityChart(cityStamp);            
         }
 
     });
@@ -240,7 +240,7 @@ $(document).ready(function() {
         sortStamp = necklineSort;
         updateChernoff(timeStamp, sortStamp);
         if (cityStamp.length > 0) {
-            updateSimilarityChart(cityStamp[0]);            
+            updateSimilarityChart(cityStamp);            
         }
 
     });
@@ -259,7 +259,7 @@ $(document).ready(function() {
         sortStamp = hatSort;
         updateChernoff(timeStamp, sortStamp);
         if (cityStamp.length > 0) {
-            updateSimilarityChart(cityStamp[0]);            
+            updateSimilarityChart(cityStamp);            
         }
     });
     
@@ -277,7 +277,7 @@ $(document).ready(function() {
         sortStamp = glassesSort;
         updateChernoff(timeStamp, sortStamp);
         if (cityStamp.length > 0) {
-            updateSimilarityChart(cityStamp[0]);            
+            updateSimilarityChart(cityStamp);            
         }
 
     });
@@ -296,7 +296,7 @@ $(document).ready(function() {
         sortStamp = scarfSort;
         updateChernoff(timeStamp, sortStamp);
         if (cityStamp.length > 0) {
-            updateSimilarityChart(cityStamp[0]);            
+            updateSimilarityChart(cityStamp);            
         }
 
     });
@@ -315,7 +315,7 @@ $(document).ready(function() {
         sortStamp = necktieSort;
         updateChernoff(timeStamp, sortStamp);
         if (cityStamp.length > 0) {
-            updateSimilarityChart(cityStamp[0]);            
+            updateSimilarityChart(cityStamp);            
         }
 
     });
@@ -344,20 +344,38 @@ $(document).ready(function() {
     });
     
     
-    $(".filter-display").click(function() {
+    $(".filter-display, .filter-cue").click(function() {
         $(".dropdown-menu").toggleClass("menu-active menu-not-active");
         $(".submenu-container").toggleClass("menu-active menu-not-active");
         
         if ($(".dropdown-menu").hasClass("menu-active")) {
             $(".filter-container").css("background-color", "#4a4a4a");
-            $(".filter-container p").css("opacity", "0");
             $(".break3").css("opacity", "0");
             $(".filter-icon").attr("src", "image/dropup.svg");
             $(".filter-cue").css("opacity", "1");
         }
         else {
             $(".filter-container").css("background-color", "#fff");
-            $(".filter-container p").css("opacity", "1");
+            $(".break3").css("opacity", "1");
+            $(".filter-icon").attr("src", "image/dropdown.svg");
+            $(".filter-cue").css("opacity", "0");
+        }
+    });
+    
+    $(".filter-display, .filter-cue").hover(function() {
+        $(".filter-container").css("background-color", "#4a4a4a");
+        $(".break3").css("opacity", "0");
+        $(".filter-icon").attr("src", "image/dropdown.svg");
+        $(".filter-cue").css("opacity", "1");
+    }, function() {
+        if ($(".dropdown-menu").hasClass("menu-active")) {
+            $(".filter-container").css("background-color", "#4a4a4a");
+            $(".break3").css("opacity", "0");
+            $(".filter-icon").attr("src", "image/dropup.svg");
+            $(".filter-cue").css("opacity", "1");
+        }
+        else {
+            $(".filter-container").css("background-color", "#fff");
             $(".break3").css("opacity", "1");
             $(".filter-icon").attr("src", "image/dropdown.svg");
             $(".filter-cue").css("opacity", "0");
@@ -440,12 +458,24 @@ $(document).ready(function() {
         
         if (str_changed == "Colorful") {
             filterStamp = "More than 1 color";
-            updateLineChart(cityStamp, filterStamp);
         }
         else {
             filterStamp = str_changed;
+        }
+        
+        if (cityStamp.length > 0) {
             updateLineChart(cityStamp, filterStamp);
         }
+        
+        $(".dropdown-menu").removeClass("menu-active");
+        $(".dropdown-menu").addClass("menu-not-active");
+        $(".submenu-container").removeClass("menu-active");
+        $(".submenu-container").addClass("menu-not-active");
+        
+        $(".filter-container").css("background-color", "#fff");
+        $(".break3").css("opacity", "1");
+        $(".filter-icon").attr("src", "image/dropdown.svg");
+        $(".filter-cue").css("opacity", "0");
         
     });
     
@@ -1001,8 +1031,8 @@ $(document).ready(function() {
 
                 d3.selectAll(".personBKG")
                     .style("box-shadow", "none");
+                updateMatrixChart(cityStamp, timeStamp);
                 clearLineChart();
-                d3.select(".instruction").style("display", "inherit");
                 d3.select(".legend2")
                     .style("opacity", "0")
                     .style("pointer-events", "none");
@@ -1013,7 +1043,6 @@ $(document).ready(function() {
                     .style("opacity","1");
                 d3.select(".cover")
                     .style("display", "none");
-                updateMatrixChart(cityStamp, timeStamp);
             });
         
         d3.select(".legend2")
@@ -1025,16 +1054,16 @@ $(document).ready(function() {
                     .style("pointer-events", "none");
                 d3.select(".line2").html("");
                 d3.select(".dots2").html("");
-                d3.select(".cover")
-                    .style("display", "none");
                 d3.selectAll(".person")
                     .attr("secondary-selected", "0");
+                d3.select(".cover")
+                    .style("display", "none");
                 
                 updateMatrixChart(cityStamp, timeStamp);
             });
         
         
-       personMerge
+       d3.selectAll(".person")
             .attr("data-gender", function(d) {
                 if (d.clothing_category == "Dress") {
                     return 1;
@@ -1092,8 +1121,8 @@ $(document).ready(function() {
                             d3.select(this)
                                 .attr("secondary-selected", "1");
                             
-                            var positionX = $(this).offset().left + 3;
-                            var positionY = $(this).offset().top -167;
+                            var positionX = $(this).offset().left - 6;
+                            var positionY = $(this).offset().top -165;
                             
                             d3.select(".cover")
                                 .style("display", "block")
@@ -1130,7 +1159,6 @@ $(document).ready(function() {
                     d3.selectAll(".personBKG")
                         .style("box-shadow", "none");
                     clearLineChart();
-                    d3.select(".instruction").style("display", "inherit");
                     d3.select(".legend2")
                         .style("opacity", "0")
                         .style("pointer-events", "none");
@@ -1148,14 +1176,24 @@ $(document).ready(function() {
                 updateLegend(cityStamp);
                 if (cityStamp.length > 0) {
                     updateLineChart(cityStamp, filterStamp);   
-                }
-                updateMatrixChart(cityStamp, timeStamp);  
+                    updateMatrixChart(cityStamp, timeStamp); 
+                } 
             })
             .select(".personBKG")
             .style("box-shadow", function(d) {
                 if(d.city_id == cityStamp[0]) {
                     return "0 0 8px 0 #000000";
                 } else if (d.city_id == cityStamp[1]) {
+                    console.log(cityStamp[1]);
+                    var positionX = $(this).offset().left - 37;
+                    var positionY = $(this).offset().top - 180;
+                    
+                    console.log(positionX);
+                    console.log(positionY);
+
+                    d3.select(".cover")
+                        .style("left", positionX + "px")
+                        .style("top", positionY + "px");
                     return "0 0 8px 0 #aaaaaa";
                 } else {
                     return "none";
@@ -2480,7 +2518,7 @@ $(document).ready(function() {
             .attr("fill", "#000")
             .style("font-size", "10px")
             .style("font-family", "'Josefin Sans', sans-serif")
-            .style("letter-spacing", "1px")
+            .style("letter-spacing", "-0.2px")
             .text(function(d) {
                 return cityNameArray[parseInt(d.city_id)];
             });
@@ -2885,8 +2923,6 @@ $(document).ready(function() {
                 if (d.wearing_scarf == "Yes") { wearScarf = "Scarf"; }
                 if (d.wearing_necktie == "Yes") { wearNecktie = "Necktie"; }
             
-                tooltip.style("opacity", "1");
-            
                 tooltip.html("<div class='text'><p class='tooltip-name'>" + cityNameArray[parseInt(d.city_id)] + "</p><p class='tooltip-detail'>Category: " + d.clothing_category + "</p><p class='tooltip-detail'>Pattern: " + d.clothing_pattern + "</p><p class='tooltip-detail'>Neckline Shape: " + d.neckline_shape + "</p><p class='tooltip-detail color'>Major Color: " + d.major_color + "</p><p class='tooltip-detail wearing'>Wearing " + wearHat + " " + wearGlasses + " " + wearScarf + " " + wearNecktie + "</p><p class='cue'></p></div><div class='line'></div><div class='icon'><img class='icon-size' src='../image/" + d.clothing_category + ".svg'><img class='icon-size' src='../image/" + d.clothing_pattern + ".svg'><img class='icon-size' src='../image/" + d.neckline_shape + ".svg'><img class='icon-size hat-icon' src='../image/Hat.svg'><img class='icon-size glasses-icon' src='../image/Glasses.svg'><img class='icon-size scarf-icon' src='../image/Scarf.svg'><img class='icon-size necktie-icon' src='../image/Necktie.svg'><div class='color-icon-size' style='background-color: " + colors_left[d.major_color] + "'></div></div>")
                 .style("left", positionX + "px")
                 .style("top", positionY + "px");
@@ -2943,6 +2979,11 @@ $(document).ready(function() {
                     .select(".personBKG")
                     .style("opacity", "0");
             
+                tooltip
+//                    .transition()
+//                    .duration(1000)
+                    .style("opacity", "1");
+            
                 original_opacity = d3.select(this).style("opacity");
             
                 d3.select(this)
@@ -2967,13 +3008,13 @@ $(document).ready(function() {
         var all_datapoint = [];
         
         line_nested.forEach(function(d) {
-            var dataSorted = d.values.sort(timeSort);
+            var dataTimeSorted = d.values.sort(timeSort);
             
             var dataitem = {};
             
             var datapoint = [];
             
-            dataSorted.forEach(function(c) {
+            dataTimeSorted.forEach(function(c) {
                 var datapointObj = {};
                 var count = 0;
                 var percentage = 0;
@@ -3287,6 +3328,7 @@ $(document).ready(function() {
 
     }
     
+    // clears line and matrix charts
     function clearLineChart() {
         d3.select(".line1").html("");
         d3.select(".line2").html("");
@@ -3295,6 +3337,11 @@ $(document).ready(function() {
         d3.select(".ruler").style("opacity","0");
         d3.select(".line-chart").select(".axis").style("opacity","0");
         d3.select(".legend-container").style("opacity", "0");
+        d3.select(".matrix-instructions").style("opacity", "0");
+        d3.select(".matrix-comparison-icon").style("opacity","0");
+        d3.select("#imageBox").style("opacity", "0");
+        d3.select("#grid").style("opacity","0");
+        d3.selectAll(".instruction").style("display", "inherit");
     }
     
     function updateMatrixChart(cities, quarter) {
@@ -3304,6 +3351,9 @@ $(document).ready(function() {
                 .style("opacity", "1");
             d3.select("#imageBox")
                 .style("opacity", "1");
+            d3.select("#grid")
+                .style("opacity", "1");
+            d3.select(".matrix-comparison-icon").style("opacity","1");
             
             var dataFilter = line_nested.filter(function(d) {
                 if (cities.length == 2) {
@@ -3315,8 +3365,6 @@ $(document).ready(function() {
                 }
             });
 
-    //        console.log(dataFilter);
-
             var dataFiltered = [];
 
             for (var i = 0; i < dataFilter.length; i++) {
@@ -3325,29 +3373,9 @@ $(document).ready(function() {
                         return d.values;
                     }
                 });
-    //            console.log(arr);
                 dataFiltered = dataFiltered.concat(arr[0].values);
             }
 
-    //        var arr1 = dataFilter[0].values.filter(function (d) {
-    //            if (d.key == quarter) {
-    //                return d.values;
-    //            }
-    //        });
-    //        
-    ////        console.log(arr1);
-    //        
-    //        var arr2 = dataFilter[1].values.filter(function (d) {
-    //            if (d.key == quarter) {
-    //                return d.values;
-    //            }
-    //        });
-    //        
-    //        console.log(arr2);                                               
-    //        
-    //        var dataFiltered = arr1[0].values.concat(arr2[0].values);
-
-    //        console.log(dataFiltered);
 
             var size = dataFiltered.length;
 
@@ -3398,10 +3426,9 @@ $(document).ready(function() {
                     }
                 }
             });
-    //        console.log(dataStore);
+
             var newData = createDataset(dataStore, cities);
-    //        console.log(newData);
-//            document.getElementById("imageBox").innerHTML = "<p>Click a combo cell to see images.</p><div><img src='image/placeholder.jpg' /><img src='image/placeholder.jpg' /><img src='image/placeholder.jpg' /></div>";
+ 
 
             var squares = allSquares.selectAll(".squareContainer")
                 .data(newData);
@@ -3512,9 +3539,6 @@ $(document).ready(function() {
             d3.select(".matrix-comparison-icon")
                 .style("opacity", "1");
 
-
-
-
             // exit + remove functions
             squares.exit().remove();
         }
@@ -3594,7 +3618,7 @@ $(document).ready(function() {
     }
         
     function showImages(d) {
-        console.log("hit");
+//        console.log("hit");
         var urls = d.imageURL;
         var selectedImages = [];
         if (urls.length > 3) { // grab 3 random images
@@ -3618,7 +3642,7 @@ $(document).ready(function() {
             lightB.setAttribute('data-lightbox', 'imagebox');
             var img = document.createElement("img");
             img.src = urlString;
-            img.style.width = "115px";
+            img.style.width = "110px";
             lightB.appendChild(img);
             document.getElementById("imageHolder").appendChild(lightB);
         }
@@ -3634,7 +3658,6 @@ $(document).ready(function() {
 //                    return "0 0 8px 0 #014cff";
 //                }
 //            });
-        
         var none_selected = true;
         d3.selectAll(".person")
             .each(function(d) {
@@ -3657,7 +3680,6 @@ $(document).ready(function() {
             d3.selectAll(".person")
                 .attr("data-similarity", function(d) {
                     var similarity = 0;
-
                     if (d.clothing_category == select_city[0].clothing_category) { similarity = similarity + 1; }
 
                     if (d.clothing_pattern == select_city[0].clothing_pattern) { similarity = similarity + 0.8; }
