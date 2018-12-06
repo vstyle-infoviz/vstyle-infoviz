@@ -429,8 +429,10 @@ $(document).ready(function() {
     });
     
     $(".dropdown-submenu li").click(function() {
-        $(".dropdown-submenu li").css("font-weight", "300");
-        $(this).css("font-weight", "bold");
+//        $(".dropdown-submenu li").css("font-weight", "300");
+//        $(".dropdown-submenu li:hover").css("font-weight", "bold");
+        $(".dropdown-submenu li").removeClass("li-item-active");
+        $(this).addClass("li-item-active");
         
         if ($(this).parent().hasClass("menu-category")) {
             $(".filter-category").text("CATEGORY");
@@ -2516,9 +2518,9 @@ $(document).ready(function() {
             .attr("alignment-baseline", "middle")
             .attr("text-anchor", "middle")
             .attr("fill", "#000")
-            .style("font-size", "10px")
+            .style("font-size", "11px")
             .style("font-family", "'Josefin Sans', sans-serif")
-            .style("letter-spacing", "-0.2px")
+            .style("letter-spacing", "0px")
             .text(function(d) {
                 return cityNameArray[parseInt(d.city_id)];
             });
@@ -2529,9 +2531,9 @@ $(document).ready(function() {
             .attr("alignment-baseline", "middle")
             .attr("text-anchor", "middle")
             .attr("fill", "#000")
-            .style("font-size", "10px")
+            .style("font-size", "11px")
             .style("font-family", "'Josefin Sans', sans-serif")
-            .style("letter-spacing", "1px")
+            .style("letter-spacing", "0px")
             .text(function(d) {
                 return cityNameArray[parseInt(d.city_id)];
             });
@@ -3354,6 +3356,7 @@ $(document).ready(function() {
             d3.select("#grid")
                 .style("opacity", "1");
             d3.select(".matrix-comparison-icon").style("opacity","1");
+            d3.selectAll(".instruction").style("display", "none");
             
             var dataFilter = line_nested.filter(function(d) {
                 if (cities.length == 2) {

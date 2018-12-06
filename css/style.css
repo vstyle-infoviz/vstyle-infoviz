@@ -259,6 +259,11 @@ h1 {
     margin-bottom: 6px;
     padding-left: 10px;
     cursor: pointer;
+    transition: font-weight 0.3s;
+}
+
+.dropdown-menu li:hover {
+    font-weight: bold;
 }
 
 .submenu-contianer {
@@ -290,6 +295,17 @@ h1 {
     margin-bottom: 6px;
     padding-left: 10px;
     cursor: pointer;
+    position: relative;
+    transition: font-weight 0.3s;
+}
+
+.dropdown-submenu li:hover {
+    font-weight: bold;
+    position: relative;
+}
+
+.dropdown-submenu .li-item-active {
+    font-weight: bold;
 }
 
 .menu-pattern ,.menu-color ,.menu-accessory ,.menu-neckline {
@@ -417,14 +433,15 @@ h1 {
 
 .instruction {
     position: absolute;
-    top: 200px;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, -50%);
 }
 
 .instruction-text {
     font-family: "Josefin Sans", sans-serif;
     font-size: 25px;
+    line-height: 35px;
     letter-spacing: -0.1px;
     color: #4a4a4a;
     text-align: center;
@@ -1221,8 +1238,8 @@ h1 {
     line-height: 2.29;
     letter-spacing: -0.2px;
     color: #000;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 5px;
     margin-left: 20px;
 }
 
