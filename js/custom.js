@@ -693,7 +693,7 @@ $(document).ready(function() {
                 .attr("class", "d3-tip")
                 .offset([0,0])
                 .html(function(d) {
-                    return "<div><h3>"+matrix_legend[d.col].split(":")[1]+" x "+matrix_legend[d.row].split(":")[1]+"</h4><h4>"+cityNameArray[parseInt(d.city)]+"</h4><h5>The combo of <strong>"+matrix_legend[d.col].split(":")[1]+"</strong> and <strong>"+matrix_legend[d.row].split(":")[1]+"</strong> appears "+((d.cor)*100).toFixed(2)+"% in the city of <strong>"+cityNameArray[parseInt(d.city)]+"</strong>, with the most common color combo being <strong>"+d.comboColor+".</strong></h5></div>";
+                    return "<div><h3>"+matrix_legend[d.col].split(":")[1]+" x "+matrix_legend[d.row].split(":")[1]+"</h4><h4>"+cityNameArray[parseInt(d.city)]+"</h4><h5>The combo of <strong>"+matrix_legend[d.col].split(":")[1]+"</strong> and <strong>"+matrix_legend[d.row].split(":")[1]+"</strong> appears "+((d.cor)*100).toFixed(0)+"% in the city of <strong>"+cityNameArray[parseInt(d.city)]+"</strong>, with the most common color combo being <strong>"+d.comboColor+".</strong></h5></div>";
                 });
         
             matrixChart.call(toolTip);
@@ -1139,6 +1139,8 @@ $(document).ready(function() {
                         .style("pointer-events", "none");
                     d3.selectAll(".person")
                         .style("opacity","1");
+                    d3.select(".cover")
+                        .style("display", "none");
                 }
                 
            
