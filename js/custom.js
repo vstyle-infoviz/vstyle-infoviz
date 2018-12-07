@@ -1,18 +1,16 @@
 $(document).ready(function() {
-    var pressing = false;
     
-    d3.select("body")
-        .on("keydown", function() {
-            if (d3.event.key == "s") {
-                pressing = true;
-//                console.log(pressing);
-            }
-        })
-        .on("keyup", function() {
-            pressing = false;
-//            console.log(pressing);
-        })
+    $(".close").click(function() {
+        d3.select(".landing").style("display", "none");
+        d3.select(".page-content").style("filter","none");
+        d3.select("body").style("overflow", "auto");
+    });
     
+    $("#help").click(function() {
+        d3.select(".landing").style("display", "flex");
+        d3.select(".page-content").style("filter","blur(8px)");
+        d3.select("body").style("overflow", "hidden");
+    });
     
     var citySort = d3.comparator()
         .order(d3.ascending, function(d) { return cityNameArray[parseInt(d.city_id)]; });
@@ -3748,6 +3746,7 @@ $(document).ready(function() {
         
 //        console.log(city.length); 
     }
+    
 
 });
 
