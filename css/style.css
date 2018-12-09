@@ -1393,8 +1393,9 @@ h1 {
 }
 
 .landing-img {
-    width: 80%;
-    margin-top: 5%;
+    max-height: 80%;
+    max-width: 80%;
+    margin-top: 3%;
 }
 
 .page-content {
